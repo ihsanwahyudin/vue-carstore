@@ -2,7 +2,7 @@
 <template>
   <IndexNavbar v-on:toggle-cart="toggleCart($event)" />
   <TransitionRoot as="template" :show="open">
-    <Dialog as="div" class="fixed z-20 inset-0 overflow-hidden" @close="open = false">
+    <Dialog as="div" class="fixed top-0 z-20 inset-0 overflow-hidden" @close="open = false">
       <div class="absolute inset-0 overflow-hidden">
         <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
           <DialogOverlay class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />

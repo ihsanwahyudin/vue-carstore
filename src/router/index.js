@@ -11,6 +11,7 @@ import Dashboard from "../views/admin/Dashboard.vue";
 import Settings from "../views/admin/Settings.vue";
 import Tables from "../views/admin/Tables.vue";
 import Maps from "../views/admin/Maps.vue";
+import Cars from "../views/admin/Cars.vue";
 
 // views for Auth layout
 
@@ -32,12 +33,16 @@ import DetailCar from "../views/DetailCar.vue";
 const routes = [
   {
     path: "/admin",
-    redirect: "/admin/dashboard",
+    redirect: "/admin/cars",
     component: Admin,
     children: [
       {
         path: "/admin/dashboard",
         component: Dashboard,
+      },
+      {
+        path: "/admin/cars",
+        component: Cars,
       },
       {
         path: "/admin/settings",
