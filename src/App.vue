@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <!-- <div id="app"> -->
     <router-view />
-  </div>
+  <!-- </div> -->
 </template>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto&display=swap');

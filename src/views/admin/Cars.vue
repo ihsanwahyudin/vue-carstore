@@ -38,32 +38,63 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr>
+                  <tr v-for="(mobil, index) in dataMobil" v-bind:key="mobil.kode_mobil">
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">AVS2021001</div>
+                      <div class="text-sm text-gray-900">{{ mobil.kode_mobil }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">Avansa</div>
+                      <div class="text-sm text-gray-900">{{ mobil.merk }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">Classic</div>
+                      <div class="text-sm text-gray-900">{{ mobil.type }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-white" style="background-color: #FF0924">
-                        #FF0924
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-white" :style="'background-color: ' + mobil.warna">
+                        {{ mobil.warna }}
                       </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">Rp. 200.000.000</div>
+                      <div class="text-sm text-gray-900">Rp. {{ formatNumber(mobil.harga_mobil) }}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <a class="btn-toggle-update btn-get-data text-indigo-600 hover:text-indigo-900"
-                      data-id=""
-                      data-merk=""
-                      data-type=""
-                      data-warna=""
-                      data-harga=""
-                      >Edit</a>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center gap-2">
+                      <button type="button" class="text-indigo-600 hover:text-indigo-900 text-lg" v-on:click="getDataByIndex(index)">
+                        <i class='bx bx-edit'></i>
+                      </button>
+                      <button type="button" class="text-red-500 hover:text-red-700 text-lg">
+                        <i class='bx bx-trash'></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="animate-pulse">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -75,22 +106,58 @@
       <!-- /End replace -->
     </div>
   </main>
+  <ModalCreate v-on:get-data="getData" />
+  <ModalUpdate :dataMobilByIndex="specificData"/>
 </template>
 
 <script>
+import ModalCreate from "../../components/Modal/Cars/ModalCreate.vue";
+import ModalUpdate from "../../components/Modal/Cars/ModalUpdate.vue";
+
 export default {
+  props: ['dataMobil'],
+  mounted() {
+    if(this.dataMobil.length == 0) {
+      this.getData();
+    }
+  },
+  data: function() {
+    return {
+      specificData: {}
+    }
+  },
+  components: {
+    ModalCreate,
+    ModalUpdate,
+  },
   methods: {
     modalCreate() {
-      $('.btn-toggle-create').click(function (e) { 
-        e.preventDefault();
-        $('#modalCreate').toggleClass('hidden');
-        $('#modalCreate').toggleClass('active');
+      document.getElementById('modalCreate').classList.toggle('hidden');
+      document.getElementById('modalCreate').classList.toggle('active');
+    },
+    modalUpdate() {
+      document.getElementById('modalUpdate').classList.toggle('hidden');
+      document.getElementById('modalUpdate').classList.toggle('active');
+    },
+    getData() {
+      fetch('http://127.0.0.1:8000/api/cars')
+      .then(response => response.json())
+      .then(result => {
+        this.fillToDataMobil(result);
+      })
+      .catch(error => {
+        console.error('Error:', error);
       });
-      $('.btn-toggle-update').click(function (e) { 
-        e.preventDefault();
-        $('#modalUpdate').toggleClass('hidden');
-        $('#modalUpdate').toggleClass('active');
-      });
+    },
+    fillToDataMobil(event) {
+      this.$emit('send-data', event);
+    },
+    getDataByIndex(index) {
+      this.specificData = this.dataMobil[index];
+      this.modalUpdate();
+    },
+    formatNumber(number) {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
   }
 }

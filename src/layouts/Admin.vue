@@ -2,15 +2,25 @@
 <template>
   <div>
     <AdminNavbar />
-    <router-view />
+    <router-view v-on:send-data="getData($event)" :dataMobil="dataMobil"/>
   </div>
 </template>
 
 <script>
 import AdminNavbar from "../components/Navbars/AdminNavbar.vue"
 export default {
+  data: function() {
+    return {
+      dataMobil: []
+    }
+  },
   components: {
     AdminNavbar,
+  },
+  methods: {
+    getData(event) {
+      this.dataMobil = event;
+    }
   }
 }
 </script>

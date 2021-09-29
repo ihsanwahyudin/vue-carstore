@@ -24,6 +24,9 @@
           <router-link to="/cart" class="nav-link py-5 px-3 text-base font-medium text-gray-700 hover:text-gray-900">
             Cart
           </router-link>
+          <router-link to="/admin" class="nav-link py-5 px-3 text-base font-medium text-gray-700 hover:text-gray-900">
+            Admin
+          </router-link>
         </div>
         <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0 py-3">
           <a v-on:click="$emit('toggle-cart', true)" href="#" class="whitespace-nowrap text-base font-medium text-gray-700 hover:text-emerald-500 mx-4 flex items-center">
