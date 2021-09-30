@@ -91,6 +91,17 @@ export default {
           this.modalCreate();
           this.$emit('get-data');
           this.clearform();
+          const Toast = this.$swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
+          Toast.fire({
+            icon: 'success',
+            title: result.message
+          });
         } else {
           this.errors = result.message;
         }

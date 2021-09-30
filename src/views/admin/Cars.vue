@@ -49,8 +49,8 @@
                       <div class="text-sm text-gray-900">{{ mobil.type }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-white" :style="'background-color: ' + mobil.warna">
-                        {{ mobil.warna }}
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full shadow-md" :class="{'text-white': parseInt('0x'+mobil.warna.replace('#', '')) <= 16770000}" :style="'background-color: ' + mobil.warna">
+                        {{ mobil.warna.replace('#', '') }}
                       </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
