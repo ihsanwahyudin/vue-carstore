@@ -60,7 +60,7 @@
                       <button type="button" class="text-indigo-600 hover:text-indigo-900 text-lg" v-on:click="getDataByIndex(index)">
                         <i class='bx bx-edit'></i>
                       </button>
-                      <button type="button" class="text-red-500 hover:text-red-700 text-lg">
+                      <button type="button" class="text-red-500 hover:text-red-700 text-lg" v-on:click="deleteDataByIndex(index)">
                         <i class='bx bx-trash'></i>
                       </button>
                     </td>
@@ -107,12 +107,14 @@
     </div>
   </main>
   <ModalCreate v-on:get-data="getData" />
-  <ModalUpdate :dataMobilByIndex="specificData"/>
+  <ModalUpdate v-on:get-data="getData" :dataMobilByIndex="specificData"/>
+  <ModalDelete v-on:get-data="getData" ref="modalDelete" />
 </template>
 
 <script>
 import ModalCreate from "../../components/Modal/Cars/ModalCreate.vue";
 import ModalUpdate from "../../components/Modal/Cars/ModalUpdate.vue";
+import ModalDelete from "../../components/Modal/Cars/ModalDelete.vue";
 
 export default {
   props: ['dataMobil'],
@@ -123,20 +125,19 @@ export default {
   },
   data: function() {
     return {
-      specificData: {}
+      specificData: {},
     }
   },
   components: {
     ModalCreate,
     ModalUpdate,
+    ModalDelete,
   },
   methods: {
     modalCreate() {
-      document.getElementById('modalCreate').classList.toggle('hidden');
       document.getElementById('modalCreate').classList.toggle('active');
     },
     modalUpdate() {
-      document.getElementById('modalUpdate').classList.toggle('hidden');
       document.getElementById('modalUpdate').classList.toggle('active');
     },
     getData() {
@@ -154,7 +155,17 @@ export default {
     },
     getDataByIndex(index) {
       this.specificData = this.dataMobil[index];
+      $('#modalUpdate .input-file').html(`
+        <input type="file" name="gambar" class="dropify rounded-md" data-default-file="http://127.0.0.1:8000/images/${this.specificData.gambar}" data-allowed-file-extensions="jpg jpeg png"/>
+      `);
+      $('#modalUpdate .dropify').dropify();
       this.modalUpdate();
+    },
+    deleteDataByIndex(index) {
+      let id = this.dataMobil[index].kode_mobil;
+      this.$refs.modalDelete.showDataId(id);
+      this.$refs.modalDelete.toggleModal(true);
+      // console.info(id);
     },
     formatNumber(number) {
       return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -163,6 +174,24 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+#modalCreate {
+  visibility: hidden;
+  opacity: 0;
+  transition: .5s;
+}
+#modalCreate.active {
+  visibility: visible;
+  opacity: 1;
+}
 
+#modalUpdate {
+  visibility: hidden;
+  opacity: 0;
+  transition: .5s;
+}
+#modalUpdate.active {
+  visibility: visible;
+  opacity: 1;
+}
 </style>

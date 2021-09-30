@@ -52,7 +52,7 @@
   background-color: #FFF;
   background-image: none;
   text-align: center;
-  border: 2px solid #E5E5E5;
+  /* border: 2px solid #E5E5E5; */
   -webkit-transition: border-color 0.15s linear;
   transition: border-color 0.15s linear; }
   .dropify-wrapper:hover {

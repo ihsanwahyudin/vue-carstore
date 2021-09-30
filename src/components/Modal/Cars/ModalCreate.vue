@@ -1,5 +1,5 @@
 <template>
-  <div id="modalCreate" class="hidden fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div id="modalCreate" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0" >
       <div class="btn-toggle-create fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" v-on:click="modalCreate"></div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -58,7 +58,7 @@
 <script>
 export default {
   mounted() {
-    $('.dropify').dropify();
+    $('#modalCreate .dropify').dropify();
   },
   data: function() {
     return {
@@ -74,7 +74,6 @@ export default {
   },
   methods: {
     modalCreate() {
-      document.getElementById('modalCreate').classList.toggle('hidden');
       document.getElementById('modalCreate').classList.toggle('active');
     },
     storeData(e) {

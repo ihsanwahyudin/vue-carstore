@@ -1,13 +1,13 @@
 <template>
-  <div id="modalUpdate" class="hidden fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div id="modalUpdate" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0" >
       <div class="btn-toggle-create fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" v-on:click="modalUpdate"></div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
       <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
         
-        <form action="" method="POST" enctype="multipart/form-data" v-on:submit="updateData">
-          <input type="hidden" name="status" value="store">
+        <form v-on:submit="updateData" id="formUpdateCar">
+          <input type="hidden" name="_method" value="PUT">
           <section class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <span class="w-full">
                 <h2 class="text-2xl mb-3">Update Car</h2>
@@ -28,7 +28,7 @@
               </span>
               <span class="w-full text-sm">
                 <label class="block mb-1 mx-1" for="">Harga</label>
-                <input name="harga_mobil" class="format-number disable-letter border w-full p-2 rounded-md focus:outline-none focus:ring" type="text" :class="{'border-red-500': errors.harga_mobil, 'border-blue-300': !errors.harga_mobil}" :value="dataMobilByIndex.harga_mobil">
+                <input name="harga_mobil" class="format-number disable-letter border w-full p-2 rounded-md focus:outline-none focus:ring" type="text" :class="{'border-red-500': errors.harga_mobil, 'border-blue-300': !errors.harga_mobil}" :value="formatNumber(parseInt(dataMobilByIndex.harga_mobil))">
                 <small v-if="errors.harga_mobil" class="text-red-500">{{ errors.harga_mobil[0] }}</small>
               </span>
               <span>
@@ -36,7 +36,7 @@
                   Gambar
                 </span>
                 <div class="input-file border rounded-md overflow-hidden" :class="{'border-red-500': errors.gambar, 'border-blue-300': !errors.gambar}">
-                  <input type="file" name="gambar" class="dropify rounded-md" :data-default-file="'http://localhost:8000/images/'+dataMobilByIndex.gambar" data-allowed-file-extensions="jpg jpeg png" />
+                  <input type="file" name="gambar" class="dropify rounded-md"  data-allowed-file-extensions="jpg jpeg png"/>
                 </div>
                 <small v-if="errors.gambar" class="text-red-500">{{ errors.gambar[0] }}</small>
               </span>
@@ -59,7 +59,6 @@
 export default {
   props: ['dataMobilByIndex'],
   mounted() {
-    $('.dropify').dropify();
   },
   data: function() {
     return {
@@ -75,20 +74,22 @@ export default {
   },
   methods: {
     modalUpdate() {
-      document.getElementById('modalUpdate').classList.toggle('hidden');
       document.getElementById('modalUpdate').classList.toggle('active');
     },
     updateData(e) {
       e.preventDefault();
-      let form = document.querySelector('#modalUpdate form');
+      let form = document.getElementById('formUpdateCar');
       let formData = new FormData(form);
-      fetch('http://127.0.0.1:8000/api/cars', {
+      // for (let value of formData.values()) {
+      //   console.log(value);
+      // }
+      fetch('http://127.0.0.1:8000/api/cars/' + this.dataMobilByIndex.kode_mobil, {
         method: 'POST',
         body: formData
       })
       .then(response => response.json())
       .then(result => {
-        console.info('Success:', result);
+        // console.info('Success:', result);
         if(result.status == true) {
           this.modalUpdate();
           this.$emit('get-data');
@@ -102,16 +103,13 @@ export default {
       });
     },
     clearform() {
-      this.formData.merk = '';
-      this.formData.type = '';
-      this.formData.warna = '';
-      this.formData.harga = '';
-      $('#modalUpdate form .input-file').html(`<input type="file" name="gambar" class="dropify rounded-md" data-allowed-file-extensions="jpg jpeg png"/>`);
-      $('.dropify').dropify();
       this.clearFormError();
     },
     clearFormError() {
       this.errors = [];
+    },
+    formatNumber(number) {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
   }
 }
