@@ -58,6 +58,7 @@
 <script>
 export default {
   props: ['dataMobilByIndex'],
+  emits: ['getData'],
   mounted() {
   },
   data: function() {
@@ -92,7 +93,7 @@ export default {
         // console.info('Success:', result);
         if(result.status == true) {
           this.modalUpdate();
-          this.$emit('get-data');
+          this.$emit('getData');
           this.clearform();
           const Toast = this.$swal.mixin({
             toast: true,

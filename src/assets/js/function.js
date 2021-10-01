@@ -1,8 +1,11 @@
 // Disable letter
 $(document).on('keypress', '.disable-letter', function(e) {
   var ch = String.fromCharCode(e.which)
+  var keycode = e.keyCode;
   if(!(/[0-9]/.test(ch))) {
-    e.preventDefault();
+    if(keycode != 13) {
+      e.preventDefault();
+    }
   }
 });
 // Format Number input

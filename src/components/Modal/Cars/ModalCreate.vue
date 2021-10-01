@@ -60,12 +60,13 @@ export default {
   mounted() {
     $('#modalCreate .dropify').dropify();
   },
+  emits: ['get-data'],
   data: function() {
     return {
       formData: {
         merk: '',
         type: '',
-        warna: '',
+        warna: '#000000',
         harga: '',
         gambar: '',
       },
@@ -129,7 +130,7 @@ export default {
     clearform() {
       this.formData.merk = '';
       this.formData.type = '';
-      this.formData.warna = '';
+      this.formData.warna = '#000000';
       this.formData.harga = '';
       $('#modalCreate form .input-file').html(`<input type="file" name="gambar" class="dropify rounded-md" data-allowed-file-extensions="jpg jpeg png"/>`);
       $('.dropify').dropify();

@@ -2,7 +2,7 @@
 <template>
   <div>
     <AdminNavbar />
-    <router-view v-on:send-data="getData($event)" :dataMobil="dataMobil"/>
+    <router-view @sendData="getData($event)" :dataMobil="dataMobil" :dataCustomer="dataCustomer"/>
   </div>
 </template>
 
@@ -11,7 +11,8 @@ import AdminNavbar from "../components/Navbars/AdminNavbar.vue"
 export default {
   data: function() {
     return {
-      dataMobil: []
+      dataMobil: [],
+      dataCustomer: [],
     }
   },
   components: {
@@ -19,8 +20,13 @@ export default {
   },
   methods: {
     getData(event) {
-      this.dataMobil = event;
-    }
+      if(event.dataMobil) {
+        this.dataMobil = event.dataMobil;
+      }
+      if(event.dataCustomer) {
+        this.dataCustomer = event.dataCustomer;
+      }
+    },
   }
 }
 </script>

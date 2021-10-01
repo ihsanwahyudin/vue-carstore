@@ -5,13 +5,7 @@
 </template>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto&display=swap');
-::-webkit-scrollbar {
-  width: 7px;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(31, 41, 55, 1);
-  border-radius: 10px;
-}
+
 
 * {
   font-family: 'Roboto', sans-serif;

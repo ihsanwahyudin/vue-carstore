@@ -49,6 +49,7 @@ import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } f
 import { ExclamationIcon } from '@heroicons/vue/outline'
 
 export default {
+  emits: ['get-data'],
   components: {
     Dialog,
     DialogOverlay,

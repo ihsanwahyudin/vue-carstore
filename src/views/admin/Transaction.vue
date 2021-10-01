@@ -10,10 +10,17 @@
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <!-- Replace with your content -->
       <div class="mt-10 sm:mt-0">
+        <div class="flex justify-end">
+          <button class="bg-indigo-600 my-2 px-4 py-2 rounded-md text-white hidden lg:block" @click="this.$refs.modalNewUser.toggleModal(true)">Pelanggan Baru</button>
+        </div>
         <div class="md:grid md:grid-cols-3 md:gap-6 mb-5">
           <div class="md:col-span-1">
             <div class="px-4 sm:px-0">
               <h3 class="text-lg font-medium leading-6 text-gray-900">Informasi Pelanggan</h3>
+              <div class="flex justify-between gap-2">
+                <button class="px-4 py-2 my-2 bg-indigo-600 rounded-md text-white" @click="this.$refs.modalSelectUser.toggleModal(true)">Pilih Pelanggan</button>
+                <button class="bg-indigo-600 my-2 px-4 py-2 rounded-md text-white lg:hidden" @click="this.$refs.modalNewUser.toggleModal(true)">Pelanggan Baru</button>
+              </div>
             </div>
           </div>
           <div class="mt-5 md:mt-0 md:col-span-2">
@@ -23,22 +30,22 @@
                   <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 sm:col-span-3">
                       <label for="nama_pembeli" class="block text-sm font-medium text-gray-700">Nama Pembeli</label>
-                      <input type="text" name="nama_pembeli" id="nama_pembeli" autocomplete="given-name" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
+                      <input v-model="selectedCustomer.nama_pembeli" type="text" name="nama_pembeli" id="nama_pembeli" autocomplete="given-name" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" readonly/>
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">
                       <label for="ktp_pembeli" class="block text-sm font-medium text-gray-700">KTP Pembeli</label>
-                      <input type="text" name="ktp_pembeli" id="ktp_pembeli" autocomplete="family-name" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
+                      <input v-model="selectedCustomer.ktp_pembeli" type="text" name="ktp_pembeli" id="ktp_pembeli" autocomplete="family-name" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" readonly/>
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="ktp_pembeli" class="block text-sm font-medium text-gray-700">Telepon Pembeli</label>
-                      <input type="text" name="ktp_pembeli" id="ktp_pembeli" autocomplete="email" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
+                      <label for="telp_pembeli" class="block text-sm font-medium text-gray-700">Telepon Pembeli</label>
+                      <input v-model="selectedCustomer.telp_pembeli" type="text" name="telp_pembeli" id="telp_pembeli" autocomplete="email" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" readonly/>
                     </div>
 
                     <div class="col-span-6">
                       <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
-                      <textarea name="alamat" id="alamat" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" autocomplete="alamat"></textarea>
+                      <textarea v-model="selectedCustomer.alamat_pembeli" name="alamat" id="alamat" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" autocomplete="alamat" readonly></textarea>
                     </div>
 
                     
@@ -59,135 +66,111 @@
                     <button @click="toggleModal" class="px-4 py-2 bg-indigo-600 rounded-md text-sm mt-1 text-white focus:ring focus:outline-none">Pilih mobil</button>
                   </div>
                   
-                  <div class="col-span-12 md:col-span-6 lg:col-span-7">
-                    <div class="group mb-6 relative overflow-hidden">
-                      <div class="relative w-full bg-white rounded-lg overflow-hidden group-hover:opacity-75 h-64">
-                        <img :src="exampleImage" class="w-full h-full object-center object-cover" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <section class="col-span-12 md:col-span-6 lg:col-span-5 bg-white border-l-2">
-                    <div class="grid grid-cols-6 gap-6 px-6">
-                      <div class="col-span-6">
-                        <h2 class="text-3xl text-gray-800 block">Avansa</h2>
-                        <div class="px-2">
-                          <p class="text-md text-black block">Mebrio</p>
-                          <p class="text-2xl text-gray-600 block">Rp. 200.000.000</p>
-                          <span class="block mt-5 mx-1">
-                            <small class="text-black block">warna</small>
-                            <div class="flex gap-2">
-                              <label for="warna1" class="cursor-pointer">
-                                <div class="color-pick p-1 rounded-full">
-                                  <div class="bg-black border h-10 w-10 rounded-full flex justify-center items-center">
-                                    <input @change="selectedColor" class="invisible" type="radio" name="warna" id="warna1">
-                                  </div>
-                                </div>
-                              </label>
-                              <label for="warna2" class="cursor-pointer">
-                                <div class="color-pick p-1 rounded-full">
-                                  <div class="bg-white border h-10 w-10 rounded-full flex justify-center items-center">
-                                    <input @change="selectedColor" class="invisible" type="radio" name="warna" id="warna2">
-                                  </div>
-                                </div>
-                              </label>
-                              <label for="warna3" class="cursor-pointer">
-                                <div class="color-pick p-1 rounded-full">
-                                  <div class="bg-gray-500 border h-10 w-10 rounded-full flex justify-center items-center">
-                                    <input @change="selectedColor" class="invisible" type="radio" name="warna" id="warna3">
-                                  </div>
-                                </div>
-                              </label>
-                            </div>
-                          </span>
+                  <template v-if="selectedCar.warna">
+                    <div class="col-span-12 md:col-span-6 lg:col-span-7">
+                      <div class="group mb-6 relative overflow-hidden">
+                        <div class="relative w-full bg-white rounded-lg overflow-hidden group-hover:opacity-75 h-64">
+                          <img :src="'http://127.0.0.1:8000/images/' + selectedCar.gambar" class="w-full h-full object-center object-cover" />
                         </div>
                       </div>
-
-                      <!-- <div class="col-span-6 sm:col-span-6 lg:col-span-3">
-                        <label for="kode_mobil" class="block text-sm font-medium text-gray-700">Kode Mobil</label>
-                        <input type="text" name="kode_mobil" id="kode_mobil" class="py-2 px-4 border-indigo-500 mt-1 block w-full border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
-                      </div>
-
-                      <div class="col-span-6 sm:col-span-6 lg:col-span-3">
-                        <label for="merk" class="block text-sm font-medium text-gray-700">Merk</label>
-                        <input type="text" name="merk" id="merk" class="py-2 px-4 border-indigo-500 mt-1 block w-full border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
-                      </div>
-
-                      <div class="col-span-6 sm:col-span-6 lg:col-span-3">
-                        <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
-                        <input type="text" name="type" id="type" class="py-2 px-4 border-indigo-500 mt-1 block w-full border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
-                      </div>
-
-                      <div class="col-span-6 sm:col-span-6 lg:col-span-3">
-                        <label for="harga_mobil" class="block text-sm font-medium text-gray-700">Harga</label>
-                        <input type="text" name="harga_mobil" id="harga_mobil" class="py-2 px-4 border-indigo-500 mt-1 block w-full border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
-                      </div> -->
-
                     </div>
-                  </section>
-                  <!--
 
-                  
-
-                  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                    <label for="merk" class="block text-sm font-medium text-gray-700">Merk</label>
-                    <input type="text" name="merk" id="merk" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
-                  </div>
-
-                  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                    <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
-                    <input type="text" name="type" id="type" autocomplete="type" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
-                  </div>
-
-                  <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                    <label for="harga_mobil" class="block text-sm font-medium text-gray-700">Harga</label>
-                    <input type="text" name="harga_mobil" id="harga_mobil" autocomplete="harga_mobil" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" />
-                  </div>
-
-                  <div class="col-span-3">
-                    <label for="warna" class="block text-sm font-medium text-gray-700">Warna</label>
-                    <div id="warna" class="py-2 px-4 mt-1 block w-full py-2 px-3 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm text-white text-center" style="background-color: #FF00FF;">#FF00FF</div>
-                  </div> -->
-
-                  <div class="col-span-12">
-                    
-                  </div>
+                    <section class="col-span-12 md:col-span-6 lg:col-span-5 bg-white border-l-2">
+                      <div class="grid grid-cols-6 gap-6 px-6">
+                        <div class="col-span-6">
+                          <h2 class="text-3xl text-gray-800 block">{{ selectedCar.merk }}</h2>
+                          <div class="px-2">
+                            <p class="text-md text-black block">{{ selectedCar.type }}</p>
+                            <p class="text-2xl text-gray-600 block">Rp. {{ formatNumber(selectedCar.harga_mobil) }}</p>
+                            <span class="block mt-5 mx-1">
+                              <small class="text-black block">warna</small>
+                              <div class="flex gap-2">
+                                <!-- <label for="warna1" class="cursor-pointer">
+                                  <div class="color-pick p-1 rounded-full active">
+                                    <div class="bg-black border h-10 w-10 rounded-full flex justify-center items-center">
+                                      <input @change="selectedColor" class="invisible" type="radio" name="warna" id="warna1" checked>
+                                    </div>
+                                  </div>
+                                </label>
+                                <label for="warna2" class="cursor-pointer">
+                                  <div class="color-pick p-1 rounded-full">
+                                    <div class="bg-white border h-10 w-10 rounded-full flex justify-center items-center">
+                                      <input @change="selectedColor" class="invisible" type="radio" name="warna" id="warna2">
+                                    </div>
+                                  </div>
+                                </label> -->
+                                <label for="warna3" class="cursor-pointer">
+                                  <div class="color-pick p-1 rounded-full active">
+                                    <div class="border h-10 w-10 rounded-full flex justify-center items-center" :style="'background-color:' + selectedCar.warna">
+                                      <input @change="selectedColor" class="invisible" type="radio" name="warna" id="warna3" checked>
+                                    </div>
+                                  </div>
+                                </label>
+                              </div>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  </template>
 
                 </div>
-              </div>
-              <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                <button type="submit" class="inline-flex justify-center py-2 px-4 border-indigo-500 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring">
-                  Save
-                </button>
               </div>
             </div>
           </form>
         </div>
+        <Payment :selectedCar="selectedCar" />
       </div>
       <!-- /End replace -->
     </div>
   </main>
-  <ModalSelectCars ref="modalSelectCars" :dataMobil="dataMobil" />
+  
+  <ModalNewUser ref="modalNewUser" @sendDataCustomer="selectedCustomer = $event; getDataCustomer();" />
+  <ModalSelectUser ref="modalSelectUser" :dataCustomer="dataCustomer" @selectUser="selectUser($event)" />
+  <ModalSelectCars ref="modalSelectCars" :dataMobil="dataMobil" @selectCar="selectCar($event)" />
 </template>
 
 <script>
 import exampleImage from '../../assets/img/team-1-800x8000.jpg';
+import Payment from '../../components/Content/Transaction/Payment.vue';
 import ModalSelectCars from '../../components/Modal/Transaction/ModalSelectCars.vue';
+import ModalSelectUser from '../../components/Modal/Transaction/ModalSelectUser.vue';
+import ModalNewUser from '../../components/Modal/Transaction/ModalNewUser.vue';
 
 export default {
-  props: ['dataMobil'],
+  props: ['dataMobil', 'dataCustomer'],
+  emits: ['sendData'],
   mounted() {
     if(this.dataMobil.length == 0) {
       this.getData();
+    }
+    if(this.dataCustomer.length == 0) {
+      this.getDataCustomer();
     }
   },
   data: function() {
     return {
       exampleImage,
+      selectedCustomer: {
+        ktp_pembeli: '',
+        nama_pembeli: '',
+        telp_pembeli: '',
+        alamat_pembeli: '',
+      },
+      selectedCar: {
+        kode_mobil: '',
+        merk: '',
+        type: '',
+        warna: false,
+        harga_mobil: '',
+      }
     }
   },
   components: {
+    Payment,
     ModalSelectCars,
+    ModalSelectUser,
+    ModalNewUser,
   },
   methods: {
     selectedColor(e) {
@@ -205,15 +188,32 @@ export default {
       fetch('http://127.0.0.1:8000/api/cars')
       .then(response => response.json())
       .then(result => {
-        this.fillToDataMobil(result);
+        this.$emit('sendData', { dataMobil: result })
       })
       .catch(error => {
         console.error('Error:', error);
       });
     },
-    fillToDataMobil(event) {
-      this.$emit('send-data', event);
+    getDataCustomer() {
+      fetch('http://127.0.0.1:8000/api/customer')
+      .then(response => response.json())
+      .then(result => {
+        this.$emit('sendData', { dataCustomer: result });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     },
+    selectUser(index) {
+      this.selectedCustomer = this.dataCustomer[index];
+    },
+    selectCar(index) {
+      this.selectedCar = this.dataMobil[index];
+      console.info(this.dataMobil[index]);
+    },
+    formatNumber(number) {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
   }
 }
 </script>

@@ -25,16 +25,16 @@
                         <thead class="bg-gray-50">
                           <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Kode Mobil
+                              No KTP
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Merk
+                              Nama
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Type
+                              No Telp
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Harga Mobil
+                              Alamat
                             </th>
                             <th scope="col" class="relative px-6 py-3">
                               <span class="sr-only">Action</span>
@@ -42,23 +42,22 @@
                           </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                          <tr v-for="(mobil, index) in dataMobil" v-bind:key="mobil.kode_mobil">
+                          <tr v-for="(customer, index) in dataCustomer" v-bind:key="customer.kode_mobil">
                             <td class="px-6 py-4 whitespace-nowrap">
-                              <div class="text-sm text-gray-900">{{ mobil.kode_mobil }}</div>
+                              <div class="text-sm text-gray-900">{{ customer.ktp_pembeli }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                              <div class="text-sm text-gray-900">{{ mobil.merk }}</div>
+                              <div class="text-sm text-gray-900">{{ customer.nama_pembeli }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                              <div class="text-sm text-gray-900">{{ mobil.type }}</div>
+                              <div class="text-sm text-gray-900">{{ customer.telp_pembeli }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                              <div class="text-sm text-gray-900">Rp. {{ formatNumber(mobil.harga_mobil) }}</div>
-                              <span class="invisible hidden">{{ mobil.harga_mobil }}</span>
+                              <div class="text-sm text-gray-900">{{ customer.alamat_pembeli }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                               <div class="text-sm text-gray-900">
-                                <button @click="selectCar(index)" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
+                                <button @click="selectCustomer(index)" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
                               </div>
                             </td>
                           </tr>
@@ -116,7 +115,7 @@ import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } f
 import { ExclamationIcon } from '@heroicons/vue/outline'
 
 export default {
-  props: ['dataMobil'],
+  props: ['dataCustomer'],
   components: {
     Dialog,
     DialogOverlay,
@@ -133,19 +132,16 @@ export default {
     toggleModal(isActive) {
       this.open = ref(isActive);
     },
-    formatNumber(number) {
-      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    },
-    selectCar(index) {
-      this.$emit('selectCar', index);
-      this.toggleModal(false);
-    },
     searchData(e) {
       let val = e.target.value.toLowerCase();
       $("#cars-table tbody tr").filter(function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(val) > -1);
       });
     },
+    selectCustomer(index) {
+      this.$emit('selectUser', index);
+      this.toggleModal(false);
+    }
   }
 }
 </script>
