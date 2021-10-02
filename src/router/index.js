@@ -13,6 +13,7 @@ import Tables from "../views/admin/Tables.vue";
 import Maps from "../views/admin/Maps.vue";
 import Cars from "../views/admin/Cars.vue";
 import Transaction from "../views/admin/Transaction.vue";
+import Invoice from "../views/admin/Invoice.vue";
 
 // views for Auth layout
 
@@ -48,6 +49,11 @@ const routes = [
       {
         path: "/admin/transaction",
         component: Transaction,
+      },
+      {
+        name: 'invoice',
+        path: "/admin/invoice/:id",
+        component: Invoice,
       },
       {
         path: "/admin/settings",

@@ -119,7 +119,7 @@
             </div>
           </form>
         </div>
-        <Payment :selectedCar="selectedCar" />
+        <Payment ref="payment" :selectedCustomer="selectedCustomer" @getData="getData" />
       </div>
       <!-- /End replace -->
     </div>
@@ -209,7 +209,7 @@ export default {
     },
     selectCar(index) {
       this.selectedCar = this.dataMobil[index];
-      console.info(this.dataMobil[index]);
+      this.$refs.payment.getData(this.selectedCar);
     },
     formatNumber(number) {
       return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
