@@ -57,7 +57,8 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                               <div class="text-sm text-gray-900">
-                                <button @click="selectCustomer(index)" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
+                                <button v-if="customer.status == 'belum lunas'" @click="selectCustomer(index)" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
+                                <button v-else @click="warningToast('Pelanggan Ini Belum Melunasi Cicilan Kredit')" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
                               </div>
                             </td>
                           </tr>
@@ -141,6 +142,14 @@ export default {
     selectCustomer(index) {
       this.$emit('selectUser', index);
       this.toggleModal(false);
+    },
+    warningToast(message) {
+      this.$swal.fire({
+        icon: 'warning',
+        title: 'Oops...',
+        text: message,
+        confirmButtonText: 'Kembali'
+      })
     }
   }
 }
