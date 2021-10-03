@@ -110,7 +110,7 @@
             </div>
           </form>
         </div>
-        <Payment ref="payment" :selectedCustomer="selectedCustomer" @getData="getData" />
+        <Payment ref="payment" :selectedCustomer="selectedCustomer" @getData="getData(); getDataCustomer(); getDataCredit();" />
       </div>
       <!-- /End replace -->
     </div>

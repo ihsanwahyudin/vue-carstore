@@ -1,6 +1,6 @@
 <template>
   <div class="mt-5">
-    <form method="POST" id="formTransaction" @submit="storeData">
+    <form v-if="isActive" method="POST" id="formTransaction" @submit="storeData">
       <template v-if="selectedCustomer">
         <input type="hidden" name="ktp_pembeli" :value="selectedCustomer.ktp_pembeli">
       </template>
@@ -24,8 +24,12 @@
             </div>
 
             <div class="col-span-12 sm:col-span-6">
-              <label for="tgl_cicilan" class="block text-sm font-medium text-gray-700">Tanggal Cicilan</label>
-              <input type="date" name="tgl_cicilan" id="tgl_cicilan" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm"/>
+              <label for="from_instalment" class="block text-sm font-medium text-gray-700">Tanggal Cicilan</label>
+              <div class="flex gap-2">
+                <input type="text" name="fromDate" id="fromDate" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="convertDate(payment.instalment.fromDate)" disabled/>
+                <span class="flex items-center text-2xl">/</span>
+                <input type="text" name="toDate" id="toDate" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="convertDate(payment.instalment.toDate)" disabled/>
+              </div>
             </div>
 
             <div class="col-span-12 sm:col-span-6">
@@ -41,7 +45,12 @@
           <div class="col-span-12 sm:col-span-4 lg:border-l-2 lg:border-gray-300 lg:px-6 grid grid-col-6 gap-6">
             <div class="col-span-6">
               <label for="cicilan_sisa_ke" class="block text-sm font-medium text-gray-700">Nominal Cicilan yang harus di bayar</label>
-              <input type="text" name="cicilan_sisa_ke" id="cicilan_sisa_ke" autocomplete="cicilan_sisa_ke" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" value="" readonly />
+              <input type="text" name="cicilan_sisa_ke" id="cicilan_sisa_ke" autocomplete="cicilan_sisa_ke" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="formatNumber(selectedDataCredit.nilai_cicilan) + ' / Bulan'" readonly />
+            </div>
+
+            <div class="col-span-6">
+              <label for="cicilan_sisa_ke" class="block text-sm font-medium text-gray-700">Biaya Tambahan / Denda</label>
+              <input type="text" name="cicilan_sisa_ke" id="cicilan_sisa_ke" autocomplete="cicilan_sisa_ke" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="formatNumber(payment.instalment.lateCharge)" readonly />
             </div>
 
             <div class="col-span-6">
@@ -62,13 +71,17 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   props: ['selectedCustomer'],
   emits: ['getData'],
   mounted() {
+
   },
   data: () => {
     return {
+      isActive: false,
       dateNow: '',
       nextMonth: '',
       payment: {
@@ -79,25 +92,26 @@ export default {
           cicilan_ke: '',
           cicilan_sisa_ke: '',
           cicilan_sisa_harga: '',
+          fromDate: '',
+          toDate: '',
+          lateCharge: '',
         }
       },
-      selectedDataCredit: {},
+      selectedDataCredit: {
+        nilai_cicilan: '',
+      },
       errors: [],
     }
   },
   methods: {
     getToday() {
       let date = new Date();
-      let today = date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
+      let today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
       this.dateNow = today;
     },
-    getNextMonth() {
-      var future = new Date();
-      future.setDate(future.getDate() + 30);
-      // var now = new Date(); 
-      // now.setDate(now.getDate() + 30);
-      // let time = Date.parse(now);
-      return future;
+    getNextMonth(from) {
+      let to = moment(from).add(30, 'days');
+      return moment(to).format('YYYY-MM-DD');
     },
     formatNumber(number) {
       return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -112,16 +126,24 @@ export default {
         this.payment.instalment.cicilan_ke = 1;
         this.payment.instalment.cicilan_sisa_ke = lamaCicilan;
         this.payment.instalment.cicilan_sisa_harga = cicilanSisaKe;
+        let from = moment(this.selectedDataCredit.tgl_kredit).format('YYYY-MM-DD');
+        let to = this.getNextMonth(from);
+
+        let lateCharge = moment().range(from, this.getToday());
+        console.info(lateCharge);
+        this.payment.instalment.fromDate = from;
+        this.payment.instalment.toDate = to;
       } else {
         this.payment.instalment.cicilan_ke = cicilanKe;
         this.payment.instalment.cicilan_sisa_ke = parseInt(lamaCicilan) - parseInt(cicilanKe);
         this.payment.instalment.cicilan_sisa_harga = this.selectedDataCredit['data_cicilan'][cicilanKe - 1].cicilan_sisa_harga;
+        let from = moment(this.selectedDataCredit['data_cicilan'][cicilanKe - 1].tgl_cicilan).format('YYYY-MM-DD');
+        let to = this.getNextMonth(from);
+        this.payment.instalment.fromDate = from;
+        this.payment.instalment.toDate = to;
       }
 
       this.payment.instalment.jml_cicilan = jmlCicilan;
-      this.nextMonth = this.getNextMonth();
-      console.info(jmlCicilan);
-      console.info(cicilanKe);
 
     },
     getData(data) {
@@ -181,6 +203,9 @@ export default {
         };
         return false;
       }
+    },
+    convertDate(time) {
+      return moment(time).format('DD-MM-YYYY');
     },
     successToast(message) {
       const Toast = this.$swal.mixin({

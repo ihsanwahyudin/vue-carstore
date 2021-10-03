@@ -45,7 +45,7 @@
           </div>
         </div>
 
-        <div class="mt-5 md:mt-0">
+        <div v-if="tableActive" class="mt-5 md:mt-0">
           <div class="shadow-md border overflow-hidden sm:rounded-md">
             <div class="px-4 py-5 bg-white sm:p-6">
               <div class="grid grid-cols-12 gap-6">
@@ -162,6 +162,7 @@ export default {
   },
   data: function() {
     return {
+      tableActive: false,
       selectedCustomer: {
         ktp_pembeli: '',
         nama_pembeli: '',
@@ -198,6 +199,8 @@ export default {
         }
       }
       this.$refs.payInstalment.getData(this.selectedDataCredit);
+      this.tableActive = true;
+      this.$refs.payInstalment.isActive = true;
     },
     formatNumber(number) {
       return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");

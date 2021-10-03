@@ -242,7 +242,7 @@ export default {
         if(result.status == true) {
           this.successToast(result.message);
           this.successToastConfirmation('Pembayaran Berhasil !!!');
-          this.$router.push({ name: 'invoice', params: { id: result.data.kode_cash } });
+          this.$router.push({ name: 'Invoice', params: { id: result.data.kode_cash } });
           this.$emit('getData');
         } else {
           this.errors = result.message;
