@@ -1,18 +1,6 @@
 <template>
-  <header class="bg-white shadow">
-    <div class="max-w-7xl mx-auto pt-6 px-4 sm:px-6 lg:px-8">
-      <h1 class="text-3xl font-bold text-gray-900">
-        Transaction
-      </h1>
-      <nav class="flex justify-center items-center bg-white w-full mt-6">
-        <div @click="paymentMethod = true" class="w-full py-2 px-4 text-center cursor-pointer hover:text-indigo-500 hover:bg-indigo-100" :class="{'text-indigo-500 border-b border-indigo-500': paymentMethod, 'text-gray-500': !paymentMethod}">Transaksi Baru</div>
-        <div @click="paymentMethod = false" class="w-full py-2 px-4 text-center cursor-pointer hover:text-indigo-500 hover:bg-indigo-100" :class="{'text-indigo-500 border-b border-indigo-500': !paymentMethod, 'text-gray-500': paymentMethod}">Bayar Cicilan</div>
-      </nav>
-    </div>
-  </header>
-  <main v-if="paymentMethod">
+  <main>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-
       <!-- Replace with your content -->
       <div class="mt-10 sm:mt-0">
         <div class="flex justify-end">
@@ -114,47 +102,27 @@
       </div>
       <!-- /End replace -->
     </div>
-
-    <ModalNewUser ref="modalNewUser" @sendDataCustomer="selectedCustomer = $event; getDataCustomer();" />
-    <ModalSelectUser ref="modalSelectUser" :paymentMethod="paymentMethod" :dataCustomer="dataCustomer" @selectUser="selectUser($event)" />
-    <ModalSelectCars ref="modalSelectCars" :dataMobil="dataMobil" @selectCar="selectCar($event)" />
   </main>
-
-  <Instalment v-if="!paymentMethod" :dataMobil="dataMobil" :dataCustomer="dataCustomer" :dataCredit="dataCredit" :paymentMethod="paymentMethod" ></Instalment>
   
+  <ModalNewUser ref="modalNewUser" @sendDataCustomer="selectedCustomer = $event; getDataCustomer();" />
+  <ModalSelectUser ref="modalSelectUser" :dataCustomer="dataCustomer" @selectUser="selectUser($event)" />
+  <ModalSelectCars ref="modalSelectCars" :dataMobil="dataMobil" @selectCar="selectCar($event)" />
 </template>
 
 <script>
-import Payment from '../../components/Content/Transaction/Payment.vue';
-import ModalSelectCars from '../../components/Modal/Transaction/ModalSelectCars.vue';
-import ModalSelectUser from '../../components/Modal/Transaction/ModalSelectUser.vue';
-import ModalNewUser from '../../components/Modal/Transaction/ModalNewUser.vue';
-import Instalment from '../../components/Content/Transaction/Instalment.vue';
+import Payment from './Payment.vue';
+import ModalSelectCars from '../../Modal/Transaction/ModalSelectCars.vue';
+import ModalSelectUser from '../../Modal/Transaction/ModalSelectUser.vue';
+import ModalNewUser from '../../Modal/Transaction/ModalNewUser.vue';
 
 export default {
-  props: ['dataMobil', 'dataCustomer', 'dataCredit'],
-  emits: ['sendData'],
-  components: {
-    Payment,
-    ModalSelectCars,
-    ModalSelectUser,
-    ModalNewUser,
-    Instalment,
-  },
+  props: ['dataMobil', 'dataCustomer'],
+  emits: ['getData'],
   mounted() {
-    if(this.dataMobil.length == 0) {
-      this.getData();
-    }
-    if(this.dataCustomer.length == 0) {
-      this.getDataCustomer();
-    }
-    if(this.dataCredit.length == 0) {
-      this.getDataCredit();
-    }
+
   },
   data: function() {
     return {
-      paymentMethod: true,
       selectedCustomer: {
         ktp_pembeli: '',
         nama_pembeli: '',
@@ -170,6 +138,12 @@ export default {
       }
     }
   },
+  components: {
+    Payment,
+    ModalSelectCars,
+    ModalSelectUser,
+    ModalNewUser,
+  },
   methods: {
     selectedColor(e) {
       let colorpick = e.target.closest('div').parentNode.parentNode.parentNode.querySelectorAll('.color-pick');
@@ -181,36 +155,6 @@ export default {
     toggleModal(e) {
       e.preventDefault();
       this.$refs.modalSelectCars.toggleModal(true);
-    },
-    getData() {
-      fetch('http://127.0.0.1:8000/api/cars')
-      .then(response => response.json())
-      .then(result => {
-        this.$emit('sendData', { dataMobil: result })
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    },
-    getDataCustomer() {
-      fetch('http://127.0.0.1:8000/api/customer')
-      .then(response => response.json())
-      .then(result => {
-        this.$emit('sendData', { dataCustomer: result });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    },
-    getDataCredit() {
-      fetch('http://127.0.0.1:8000/api/report/data/kredit')
-      .then(response => response.json())
-      .then(result => {
-        this.$emit('sendData', { dataCredit: result });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
     },
     selectUser(index) {
       this.selectedCustomer = this.dataCustomer[index];

@@ -11,7 +11,7 @@
       <!-- Replace with your content -->
       <div class="flex justify-between">
         <button class="bg-gray-800 my-2 px-4 py-2 rounded-lg text-white" v-on:click="modalCreate">new car</button>
-        <input type="search" class="my-2 px-3 bg-white border-2 border-gray-800 rounded-lg focus:outline-none focus:ring" placeholder="search" @keyup="searchData">
+        <input type="search" class="my-2 px-3 bg-white shadow rounded-lg focus:outline-none focus:ring" placeholder="search" @keyup="searchData">
       </div>
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -121,7 +121,7 @@ import ModalUpdate from "../../components/Modal/Cars/ModalUpdate.vue";
 import ModalDelete from "../../components/Modal/Cars/ModalDelete.vue";
 
 export default {
-  props: ['dataMobil', 'dataCustomer'],
+  props: ['dataMobil', 'dataCustomer', 'dataCredit'],
   emits: ['sendData'],
   mounted() {
     if(this.dataMobil.length == 0) {

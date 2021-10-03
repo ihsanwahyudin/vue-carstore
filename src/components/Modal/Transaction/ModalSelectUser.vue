@@ -42,26 +42,51 @@
                           </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                          <tr v-for="(customer, index) in dataCustomer" v-bind:key="customer.kode_mobil">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                              <div class="text-sm text-gray-900">{{ customer.ktp_pembeli }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                              <div class="text-sm text-gray-900">{{ customer.nama_pembeli }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                              <div class="text-sm text-gray-900">{{ customer.telp_pembeli }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                              <div class="text-sm text-gray-900">{{ customer.alamat_pembeli }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                              <div class="text-sm text-gray-900">
-                                <button v-if="customer.status == 'belum lunas'" @click="selectCustomer(index)" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
-                                <button v-else @click="warningToast('Pelanggan Ini Belum Melunasi Cicilan Kredit')" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
-                              </div>
-                            </td>
-                          </tr>
+                          <template v-if="paymentMethod">
+                            <tr v-for="(customer, index) in dataCustomer" v-bind:key="customer.ktp_pembeli">
+                              <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ customer.ktp_pembeli }}</div>
+                              </td>
+                              <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ customer.nama_pembeli }}</div>
+                              </td>
+                              <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ customer.telp_pembeli }}</div>
+                              </td>
+                              <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ customer.alamat_pembeli }}</div>
+                              </td>
+                              <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">
+                                  <button v-if="customer.status != 'belum lunas'" @click="selectCustomer(index)" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
+                                  <button v-else @click="warningToast('Pelanggan Ini Belum Melunasi Cicilan Kredit')" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
+                                </div>
+                              </td>
+                            </tr>
+                          </template>
+                          <template v-else>
+                            <template v-for="(customer, index) in dataCustomer" v-bind:key="customer.ktp_pembeli">
+                              <tr v-if="customer.status == 'belum lunas'">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                  <div class="text-sm text-gray-900">{{ customer.ktp_pembeli }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                  <div class="text-sm text-gray-900">{{ customer.nama_pembeli }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                  <div class="text-sm text-gray-900">{{ customer.telp_pembeli }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                  <div class="text-sm text-gray-900">{{ customer.alamat_pembeli }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                  <div class="text-sm text-gray-900">
+                                    <button @click="selectCustomer(index)" type="button" class="px-4 py-2 bg-indigo-500 rounded-md text-white">Pilih</button>
+                                  </div>
+                                </td>
+                              </tr>
+                            </template>
+                          </template>
                           <tr class="animate-pulse">
                             <td class="px-6 py-4 whitespace-nowrap">
                               <div class="text-sm text-gray-900">
@@ -113,10 +138,9 @@
 <script>
 import { ref } from 'vue'
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { ExclamationIcon } from '@heroicons/vue/outline'
 
 export default {
-  props: ['dataCustomer'],
+  props: ['dataCustomer', 'paymentMethod'],
   components: {
     Dialog,
     DialogOverlay,

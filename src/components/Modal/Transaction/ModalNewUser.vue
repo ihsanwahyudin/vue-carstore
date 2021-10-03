@@ -59,7 +59,6 @@ import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } f
 import { ExclamationIcon } from '@heroicons/vue/outline'
 
 export default {
-  props: ['dataMobil'],
   components: {
     Dialog,
     DialogOverlay,

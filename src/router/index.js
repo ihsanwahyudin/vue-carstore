@@ -47,11 +47,12 @@ const routes = [
         component: Cars,
       },
       {
+        name: 'Transaction',
         path: "/admin/transaction",
         component: Transaction,
       },
       {
-        name: 'invoice',
+        name: 'Invoice',
         path: "/admin/invoice/:id",
         component: Invoice,
       },

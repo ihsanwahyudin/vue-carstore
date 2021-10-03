@@ -1,0 +1,68 @@
+<template>
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold text-gray-900">
+        Transaction
+      </h1>
+    </div>
+  </header>
+  <NewTransaction :dataMobil="dataMobil" :dataCustomer="dataCustomer" />
+  
+</template>
+
+<script>
+import NewTransaction from "../../components/Content/Transaction/NewTransaction.vue";
+
+export default {
+  props: ['dataMobil', 'dataCustomer'],
+  emits: ['sendData'],
+  mounted() {
+    if(this.dataMobil.length == 0) {
+      this.getData();
+    }
+    if(this.dataCustomer.length == 0) {
+      this.getDataCustomer();
+    }
+  },
+  data: function() {
+    return {
+
+    }
+  },
+  components: {
+    NewTransaction,
+  },
+  methods: {
+    getData() {
+      fetch('http://127.0.0.1:8000/api/cars')
+      .then(response => response.json())
+      .then(result => {
+        this.$emit('sendData', { dataMobil: result })
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
+    getDataCustomer() {
+      fetch('http://127.0.0.1:8000/api/customer')
+      .then(response => response.json())
+      .then(result => {
+        this.$emit('sendData', { dataCustomer: result });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
+  }
+}
+</script>
+
+<style scoped>
+.color-pick.active {
+  border: 2px solid rgba(99, 102, 241, 1);
+}
+
+.color-pick {
+  border: 2px solid transparent;
+}
+</style>

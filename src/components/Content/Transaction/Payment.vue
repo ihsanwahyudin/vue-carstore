@@ -5,9 +5,9 @@
         <input type="hidden" name="ktp_pembeli" :value="selectedCustomer.ktp_pembeli">
       </template>
       <div class="shadow-md border overflow-hidden sm:rounded-md">
-        <nav class="flex justify-center items-center">
-          <span @click="open = true" class="py-2 px-4 cursor-pointer hover:text-indigo-500" :class="{'text-indigo-500 border-b border-indigo-500': open, 'text-gray-500': !open}">Cash</span>
-          <span @click="renderDropify" class="py-2 px-4 cursor-pointer hover:text-indigo-500" :class="{'text-indigo-500 border-b border-indigo-500': !open, 'text-gray-500': open}">Kredit</span>
+        <nav class="flex justify-center items-center bg-white">
+          <span @click="open = true" class="py-2 lg:px-24 px-10 cursor-pointer hover:text-indigo-500 hover:bg-indigo-100" :class="{'text-indigo-500 border-b border-indigo-500': open, 'text-gray-500': !open}">Cash</span>
+          <span @click="renderDropify" class="py-2 lg:px-24 px-10 cursor-pointer hover:text-indigo-500 hover:bg-indigo-100" :class="{'text-indigo-500 border-b border-indigo-500': !open, 'text-gray-500': open}">Kredit</span>
         </nav>
         <section v-if="open" class="px-4 py-5 bg-white sm:p-6 grid grid-cols-12 gap-6">
           <div class="col-span-12 sm:col-span-8 grid grid-cols-12 gap-6">
@@ -266,7 +266,7 @@ export default {
         if(result.status == true) {
           this.successToast(result.message);
           this.successToastConfirmation('Pembayaran Berhasil !!!');
-          this.$router.push({ name: 'invoice', params: { id: result.data.kode_kredit } });
+          this.$router.push({ name: 'Invoice', params: { id: result.data.kode_kredit } });
           this.$emit('getData');
         } else {
           this.errors = result.message;
