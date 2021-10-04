@@ -120,7 +120,7 @@
     <ModalSelectCars ref="modalSelectCars" :dataMobil="dataMobil" @selectCar="selectCar($event)" />
   </main>
 
-  <Instalment v-if="!paymentMethod" :dataMobil="dataMobil" :dataCustomer="dataCustomer" :dataCredit="dataCredit" :paymentMethod="paymentMethod" ></Instalment>
+  <Instalment v-if="!paymentMethod" :dataMobil="dataMobil" :dataCustomer="dataCustomer" :dataCredit="dataCredit" :paymentMethod="paymentMethod" @getData="getData(); getDataCustomer(); getDataCredit();" ></Instalment>
   
 </template>
 

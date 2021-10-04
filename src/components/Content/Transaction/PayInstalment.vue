@@ -1,6 +1,6 @@
 <template>
   <div class="mt-5">
-    <form v-if="isActive" method="POST" id="formTransaction" @submit="storeData">
+    <form v-if="isActive" method="POST" id="formInstalment" @submit="storeData">
       <template v-if="selectedCustomer">
         <input type="hidden" name="ktp_pembeli" :value="selectedCustomer.ktp_pembeli">
       </template>
@@ -19,43 +19,61 @@
             </div>
 
             <div class="col-span-12 sm:col-span-6">
-              <label for="tgl_pembayaran" class="block text-sm font-medium text-gray-700">Tanggal Pembayaran</label>
-              <input type="text" name="tgl_pembayaran" id="tgl_pembayaran" autocomplete="given-name" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" v-model="dateNow" readonly />
+              <label for="tgl_cicilan" class="block text-sm font-medium text-gray-700">Tanggal Pembayaran</label>
+              <input type="text" name="tgl_cicilan" id="tgl_cicilan" autocomplete="given-name" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="convertDate(dateNow)" readonly />
             </div>
 
             <div class="col-span-12 sm:col-span-6">
               <label for="from_instalment" class="block text-sm font-medium text-gray-700">Tanggal Cicilan</label>
               <div class="flex gap-2">
-                <input type="text" name="fromDate" id="fromDate" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="convertDate(payment.instalment.fromDate)" disabled/>
+                <input type="text" name="" id="" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="convertDate(payment.instalment.fromDate)" disabled/>
+                <input type="hidden" name="from" :value="payment.instalment.fromDate">
                 <span class="flex items-center text-2xl">/</span>
-                <input type="text" name="toDate" id="toDate" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="convertDate(payment.instalment.toDate)" disabled/>
+                <input type="text" name="" id="" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="convertDate(payment.instalment.toDate)" disabled/>
+                <input type="hidden" name="to" :value="payment.instalment.toDate">
               </div>
             </div>
 
             <div class="col-span-12 sm:col-span-6">
-              <label for="cicilan_sisa_ke" class="block text-sm font-medium text-gray-700">Cicilan Sisa Ke</label>
-              <input type="text" name="cicilan_sisa_ke" id="cicilan_sisa_ke" autocomplete="cicilan_sisa_ke" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="formatNumber(payment.instalment.cicilan_sisa_ke)" readonly />
+
+              <label for="cicilan_sisa_ke" class="block text-sm font-medium text-gray-700">Cicilan Ke</label>
+              <div class="flex gap-2">
+                <input type="text" name="cicilan_ke" id="cicilan_ke" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="payment.instalment.cicilan_ke" readonly />
+                <span class="flex items-center text-2xl">/</span>
+                <input type="text" name="" id=""  class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="selectedDataCredit.lama_cicilan + ' Bulan'" readonly />
+                <input type="hidden" name="cicilan_sisa_ke" :value="payment.instalment.cicilan_sisa_ke">
+              </div>
             </div>
 
             <div class="col-span-12 sm:col-span-6">
-              <label for="cicilan_sisa_harga" class="block text-sm font-medium text-gray-700">Cicilan Sisa Ke</label>
-              <input type="text" name="cicilan_sisa_harga" id="cicilan_sisa_harga" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="formatNumber(payment.instalment.cicilan_sisa_harga)" readonly />
+              <label for="" class="block text-sm font-medium text-gray-700">Sisa Cicilan</label>
+              <input type="text" name="" id="" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="formatNumber(payment.instalment.cicilan_sisa_harga)" readonly />
+              <input type="hidden" name="cicilan_sisa_harga" :value="payment.instalment.cicilan_sisa_harga">
             </div>
+  
+            <div class="col-span-12 sm:col-span-6">
+              <label for="" class="block text-sm font-medium text-gray-700">Nominal Cicilan yang harus di bayar</label>
+              <input type="text" name="" id="" autocomplete="cicilan_sisa_ke" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="formatNumber(selectedDataCredit.nilai_cicilan) + ' / Bulan'" readonly />
+            </div>
+
           </div>
-          <div class="col-span-12 sm:col-span-4 lg:border-l-2 lg:border-gray-300 lg:px-6 grid grid-col-6 gap-6">
-            <div class="col-span-6">
-              <label for="cicilan_sisa_ke" class="block text-sm font-medium text-gray-700">Nominal Cicilan yang harus di bayar</label>
-              <input type="text" name="cicilan_sisa_ke" id="cicilan_sisa_ke" autocomplete="cicilan_sisa_ke" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="formatNumber(selectedDataCredit.nilai_cicilan) + ' / Bulan'" readonly />
-            </div>
+          <div class="col-span-12 sm:col-span-4 lg:border-l-2 lg:border-gray-300 lg:px-6 grid grid-col-6">
+            <div class="flex flex-col gap-6">
+              <div class="col-span-6">
+                <label for="" class="block text-sm font-medium text-gray-700">Biaya Tambahan / Denda</label>
+                <input type="text" name="" id="" autocomplete="" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="'Rp. +' + formatNumber(payment.instalment.lateCharge)" readonly :class="{ 'bg-green-500': payment.instalment.lateCharge <= 0, 'bg-red-500': payment.instalment.lateCharge > 0 }" />
+                <input type="hidden" name="denda" :value="payment.instalment.lateCharge">
+              </div>
 
-            <div class="col-span-6">
-              <label for="cicilan_sisa_ke" class="block text-sm font-medium text-gray-700">Biaya Tambahan / Denda</label>
-              <input type="text" name="cicilan_sisa_ke" id="cicilan_sisa_ke" autocomplete="cicilan_sisa_ke" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="formatNumber(payment.instalment.lateCharge)" readonly />
-            </div>
+              <div class="col-span-6">
+                <label for="grandtotal" class="block text-sm font-medium text-gray-700">Grandtotal</label>
+                <input type="text" name="grandtotal" id="grandtotal" autocomplete="cicilan_sisa_ke" class="format-number disable-letter py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :value="formatNumber(payment.instalment.grandtotal)" readonly />
+              </div>
 
-            <div class="col-span-6">
-              <label for="jml_cicilan" class="block text-sm font-medium text-gray-700">Masukan Nominal Uang</label>
-              <input type="text" name="jml_cicilan" id="jml_cicilan" autocomplete="jml_cicilan" class="format-number disable-letter py-2 px-4 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :class="{ 'border-red-500': errors.jml_cicilan, 'border-indigo-500': !errors.jml_cicilan }"/>
+              <div class="col-span-6">
+                <label for="jml_cicilan" class="block text-sm font-medium text-gray-700">Masukan Nominal Uang</label>
+                <input type="text" name="jml_cicilan" id="jml_cicilan" autocomplete="jml_cicilan" class="format-number disable-letter py-2 px-4 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" :class="{ 'border-red-500': errors.jml_cicilan, 'border-indigo-500': !errors.jml_cicilan }"/>
+              </div>
             </div>
           </div>
         </section>
@@ -72,6 +90,7 @@
 
 <script>
 import moment from 'moment';
+// import twix from 'twix';
 
 export default {
   props: ['selectedCustomer'],
@@ -88,26 +107,30 @@ export default {
         instalment: {
           kode_kredit: '',
           tgl_cicilan: '',
-          jml_cicilan: '',
+          nilai_cicilan: '',
           cicilan_ke: '',
           cicilan_sisa_ke: '',
           cicilan_sisa_harga: '',
           fromDate: '',
           toDate: '',
-          lateCharge: '',
+          grandtotal: '',
+          lateCharge: 0,
         }
       },
       selectedDataCredit: {
+        kode_kredit: '',
+        kode_mobil: '',
         nilai_cicilan: '',
+        lama_cicilan: '',
       },
       errors: [],
     }
   },
   methods: {
     getToday() {
-      let date = new Date();
-      let today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-      this.dateNow = today;
+      // let date = new Date();
+      // let today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+      this.dateNow = moment().format('YYYY-MM-DD');
     },
     getNextMonth(from) {
       let to = moment(from).add(30, 'days');
@@ -118,32 +141,69 @@ export default {
     },
     calculate() {
       this.getToday();
-      let jmlCicilan = this.selectedDataCredit.nilai_cicilan;
+      let nilaiCicilan = this.selectedDataCredit.nilai_cicilan;
       let cicilanKe = this.selectedDataCredit['data_cicilan'].length;
       let lamaCicilan = this.selectedDataCredit.lama_cicilan;
       if(cicilanKe == 0) {
-        let cicilanSisaKe = parseInt(this.selectedDataCredit.paket_jml_cicilan) - parseInt(this.selectedDataCredit.harga_paket);
+        let cicilanSisaHarga = parseInt(this.selectedDataCredit.paket_jml_cicilan) - parseInt(this.selectedDataCredit.uang_muka);
         this.payment.instalment.cicilan_ke = 1;
         this.payment.instalment.cicilan_sisa_ke = lamaCicilan;
-        this.payment.instalment.cicilan_sisa_harga = cicilanSisaKe;
+        this.payment.instalment.cicilan_sisa_harga = cicilanSisaHarga;
         let from = moment(this.selectedDataCredit.tgl_kredit).format('YYYY-MM-DD');
         let to = this.getNextMonth(from);
+        let today = moment().format('YYYY-MM-DD');
 
-        let lateCharge = moment().range(from, this.getToday());
+        this.payment.instalment.fromDate = from;
+        this.payment.instalment.toDate = to;
+        // Calculate LateCharge
+        let fromDate = moment(from.split('-'));
+        let toNow = moment(today.split('-'));
+        let lateCharge = toNow.diff(fromDate, 'day');
+
+        if(parseInt(lateCharge) > 30) {
+          let check = parseInt(lateCharge) / 30;
+          console.info(check);
+          console.info(Math.ceil(check));
+          if(Math.ceil(check) > 2) {
+            console.info('sudah ' + lateCharge + ' Belum Bayar Utang');
+            this.payment.instalment.lateCharge = 5000 * 30;
+          } else {
+            console.info('sudah ' + lateCharge + ' Belum Bayar Utang');
+            this.payment.instalment.lateCharge = 5000 * (lateCharge - 30);
+          }
+        } else {
+          this.payment.instalment.lateCharge = 0;
+          console.info('aman bang baru ' + lateCharge + ' hari');
+        }
         console.info(lateCharge);
-        this.payment.instalment.fromDate = from;
-        this.payment.instalment.toDate = to;
       } else {
-        this.payment.instalment.cicilan_ke = cicilanKe;
+        let cicilanSisaHarga = parseInt(this.selectedDataCredit['data_cicilan'][cicilanKe - 1].cicilan_sisa_harga);
+        let nilaiCicilan = parseInt(this.selectedDataCredit.nilai_cicilan);
+        this.payment.instalment.cicilan_ke = cicilanKe + 1;
         this.payment.instalment.cicilan_sisa_ke = parseInt(lamaCicilan) - parseInt(cicilanKe);
-        this.payment.instalment.cicilan_sisa_harga = this.selectedDataCredit['data_cicilan'][cicilanKe - 1].cicilan_sisa_harga;
-        let from = moment(this.selectedDataCredit['data_cicilan'][cicilanKe - 1].tgl_cicilan).format('YYYY-MM-DD');
+        this.payment.instalment.cicilan_sisa_harga = cicilanSisaHarga - nilaiCicilan;
+        let from = moment(this.selectedDataCredit['data_cicilan'][cicilanKe - 1].to).format('YYYY-MM-DD');
         let to = this.getNextMonth(from);
+        let today = moment().format('YYYY-MM-DD');
+
         this.payment.instalment.fromDate = from;
         this.payment.instalment.toDate = to;
+        // Calculate LateCharge
+        let fromDate = moment(from.split('-'));
+        let toNow = moment(today.split('-'));
+        let lateCharge = toNow.diff(fromDate, 'day');
+
+        if(lateCharge > 30) {
+          console.info('sudah ' + lateCharge + ' Belum Bayar Utang');
+          this.payment.instalment.lateCharge = 5000 * (lateCharge - 30);
+        } else {
+          this.payment.instalment.lateCharge = 0;
+          console.info('aman bang baru ' + lateCharge + ' hari');
+        }
       }
 
-      this.payment.instalment.jml_cicilan = jmlCicilan;
+      this.payment.instalment.nilai_cicilan = nilaiCicilan;
+      this.payment.instalment.grandtotal = parseInt(nilaiCicilan) + parseInt(this.payment.instalment.lateCharge);
 
     },
     getData(data) {
@@ -154,34 +214,37 @@ export default {
     },
     storeData(e) {
       e.preventDefault();
-      let form = document.querySelector('#formTransaction');
+      let form = document.querySelector('#formInstalment');
       let formData = new FormData(form);
       if(this.selectedCustomer.ktp_pembeli) {
-        if(this.selectedCar.kode_mobil != '' || this.selectedCar.kode_mobil.length != 0) {
-          if(this.cashFormValidation()) {
-            this.storeCash(formData);
+        if(this.selectedDataCredit.kode_mobil != '' || this.selectedDataCredit.kode_mobil.length != 0) {
+          if(this.instalmentFormValidation()) {
+            this.storeInstalment(formData);
           } else {
             this.warningToast('Uang Tidak Cukup !!!');
           }
         } else {
-          this.warningToast('Pilih Mobil dulu !!!');
+          this.warningToast('Tidak Ada Transaksi Kredit Mobil !!!');
         }
       } else {
         this.warningToast('Pilih Pelanggan dulu !!!');
       }
     },
-    storeCash(formData) {
-      fetch('http://127.0.0.1:8000/api/cash/payment', {
+    storeInstalment(formData) {
+      for(let item of formData.values()) {
+        console.info(item);
+      }
+      fetch('http://127.0.0.1:8000/api/instalment/payment', {
         method: 'POST',
         body: formData
       })
       .then(response => response.json())
       .then(result => {
-        // console.info('Success:', result);
+        console.info('Success:', result);
         if(result.status == true) {
           this.successToast(result.message);
           this.successToastConfirmation('Pembayaran Berhasil !!!');
-          this.$router.push({ name: 'invoice', params: { id: result.data.kode_cash } });
+          this.$router.push({ name: 'Invoice', params: { id: result.data.kode_cicilan } });
           this.$emit('getData');
         } else {
           this.errors = result.message;
@@ -191,15 +254,15 @@ export default {
         console.error('Error:', error.message);
       });
     },
-    cashFormValidation() {
-      let hargaMobil = this.selectedCar.harga_mobil;
-      let cashBayar = $('input#cash_bayar').val().replace(/[^,\d]/g, '');
-      if(cashBayar.length != 0 && parseInt(cashBayar) >= parseInt(hargaMobil)) {
+    instalmentFormValidation() {
+      let grandtotal = this.payment.instalment.grandtotal;
+      let jmlCicilan = $('input#jml_cicilan').val().replace(/[^,\d]/g, '');
+      if(jmlCicilan.length != 0 && parseInt(jmlCicilan) >= parseInt(grandtotal)) {
         this.errors = [];
         return true;
       } else {
         this.errors = {
-          cash_bayar: 'Uang Tidak Cukup',
+          jml_cicilan: 'Uang Tidak Cukup',
         };
         return false;
       }

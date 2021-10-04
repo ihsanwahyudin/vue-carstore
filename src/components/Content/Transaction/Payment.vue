@@ -111,7 +111,16 @@
               <input type="hidden" name="paket_jml_cicilan" v-model="payment.credit.paketJmlCicilan">
 
               <div>
-                <label for="min_uang_muka" class="block text-sm font-medium text-gray-700">Minimal Uang Muka</label>
+                <label for="persentase_uang_muka" class="block text-sm font-medium text-gray-700">(%) Minimal Uang Muka</label>
+                <select name="persentase_uang_muka" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-white rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" id="lama_cicilan" v-model="payment.credit.persentase_uang_muka" @change="calculate">
+                  <option value="20">(20%)</option>
+                  <option value="25">(25%)</option>
+                  <option value="30">(30%)</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="min_uang_muka" class="block text-sm font-medium text-gray-700">Total Uang Muka</label>
                 <input type="text" name="" id="min_uang_muka" autocomplete="given-name" class="py-2 px-4 border-indigo-500 mt-1 block w-full py-2 px-3 border bg-gray-100 rounded-md shadow-sm focus:outline-none focus:ring sm:text-sm" readonly :value="formatNumber(payment.credit.min_uang_muka)"/>
               </div>
 
@@ -153,6 +162,7 @@ export default {
           cicilan: 0,
           min_uang_muka: 0,
           paketJmlCicilan: 0,
+          persentase_uang_muka: 20,
         }
       },
       selectedCar: {
@@ -185,8 +195,10 @@ export default {
       this.payment.cash.grandtotal = parseInt(this.selectedCar.harga_mobil) + parseInt(this.payment.cash.bunga);
       this.payment.credit.bunga
 
+      let persentaseUangMuka = parseInt(this.payment.credit.persentase_uang_muka);
       let hargaMobil = parseInt(this.selectedCar.harga_mobil);
-      let dp = parseInt(hargaMobil) * 20/100;
+      let dp = parseInt(hargaMobil) * persentaseUangMuka / 100;
+
       let ph = hargaMobil - dp;
       let lamaCicilan = Math.ceil(parseInt(this.payment.credit.lama_cicilan) / 12);
       let jumlahBulan = parseInt(this.payment.credit.lama_cicilan);

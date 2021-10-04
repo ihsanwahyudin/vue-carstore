@@ -206,7 +206,7 @@ export default {
       return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     },
     getData() {
-      
+      this.$emit('getData');
     },
   }
 }
