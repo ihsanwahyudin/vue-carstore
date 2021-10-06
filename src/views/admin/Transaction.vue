@@ -75,7 +75,7 @@
                     <div class="col-span-12 md:col-span-6 lg:col-span-7">
                       <div class="group mb-6 relative overflow-hidden">
                         <div class="relative w-full bg-white rounded-lg overflow-hidden group-hover:opacity-75 h-64">
-                          <img :src="'http://127.0.0.1:8000/images/' + selectedCar.gambar" class="w-full h-full object-center object-cover" />
+                          <img :src="'http://127.0.0.1:8000/images/' + selectedCar.gambar" class="w-full h-full object-center object-contain" />
                         </div>
                       </div>
                     </div>

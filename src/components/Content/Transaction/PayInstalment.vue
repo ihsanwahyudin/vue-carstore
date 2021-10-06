@@ -231,9 +231,9 @@ export default {
       }
     },
     storeInstalment(formData) {
-      for(let item of formData.values()) {
-        console.info(item);
-      }
+      // for(let item of formData.values()) {
+      //   console.info(item);
+      // }
       fetch('http://127.0.0.1:8000/api/instalment/payment', {
         method: 'POST',
         body: formData

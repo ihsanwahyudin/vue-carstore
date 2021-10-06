@@ -1,25 +1,19 @@
 // Disable letter
-let inputText = document.getElementsByClassName('disable-letter');
-for(let i= 0; i < inputText.length; i++) {
-  inputText[i].addEventListener('keyup', function(e) {
-    var ch = String.fromCharCode(e.which)
-    var keycode = e.keyCode;
-    if(!(/[0-9]/.test(ch))) {
-      if(keycode != 13) {
-        e.preventDefault();
-      }
+$(document).on('keypress', '.disable-letter', function(e) {
+  var ch = String.fromCharCode(e.which)
+  var keycode = e.keyCode;
+  if(!(/[0-9]/.test(ch))) {
+    if(keycode != 13) {
+      e.preventDefault();
     }
-  });
-}
+  }
+});
 // Format Number input
 let formatHarga;
-let formatNumber = document.getElementsByClassName('format-number');
-for(let i = 0; i < formatNumber.length; i++) {
-  formatNumber[i].addEventListener('keyup', function(e) {
-    formatHarga = this;
-    formatHarga.value = formatForNumber(this.value);
-  });
-}
+$(document).on('keyup', '.format-number', function (e) {
+  formatHarga = this;
+  formatHarga.value = formatForNumber(this.value);
+});
 
 function formatForNumber(angka, prefix){
   var number_string = angka.replace(/[^,\d]/g, '').toString(),

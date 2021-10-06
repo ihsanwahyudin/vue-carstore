@@ -3,40 +3,97 @@ import { createWebHistory, createRouter } from "vue-router";
 // layouts
 
 import Admin from "../layouts/Admin.vue";
-import Auth from "../layouts/Auth.vue";
 
 // views for Admin layout
 
 import Dashboard from "../views/admin/Dashboard.vue";
-import Settings from "../views/admin/Settings.vue";
-import Tables from "../views/admin/Tables.vue";
-import Maps from "../views/admin/Maps.vue";
 import Cars from "../views/admin/Cars.vue";
 import Transaction from "../views/admin/Transaction.vue";
 import Invoice from "../views/admin/Invoice.vue";
-
-// views for Auth layout
-
-import Login from "../views/auth/Login.vue";
-import Register from "../views/auth/Register.vue";
+import UserManagement from "../views/admin/UserManagement.vue";
+import Report from "../views/admin/Report.vue";
 
 // views without layouts
 
-import Landing from "../views/Landing.vue";
-import Profile from "../views/Profile.vue";
 import Index from "../views/Index.vue";
+import Login from "../views/auth/Login.vue";
+import Register from "../views/auth/Register.vue";
 import Store from "../views/Store.vue";
 import DetailCar from "../views/DetailCar.vue";
 
 // routes
 
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
+function checkMiddleware() {
+  
+}
 
 const routes = [
   {
+    path: "/",
+    redirect: "/login",
+    // component: Index,
+  },
+  {
+    name: 'Login',
+    path: "/login",
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      fetch('http://127.0.0.1:8000/api/user', {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${getCookie('jwt')}`,
+        },
+      })
+      .then(response => response.json())
+      .then(result => {
+        if(result.status) {
+          next({name: 'Admin'});
+        } else {
+          next();
+        }
+      })
+    },
+  },
+  {
+    path: '/register',
+    component: Register,
+  },
+  {
+    path: "/store",
+    component: Store,
+  },
+  {
+    path: "/store/:kodemobil",
+    component: DetailCar,
+  },
+  {
+    name: 'Admin',
     path: "/admin",
     redirect: "/admin/cars",
     component: Admin,
+    beforeEnter: (to, from, next) => {
+      fetch('http://127.0.0.1:8000/api/user', {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${getCookie('jwt')}`,
+        },
+      })
+      .then(response => response.json())
+      .then(result => {
+        if(result.status) {
+          next();
+          
+        } else {
+          next({name: 'Login'});
+        }
+      })
+    },
     children: [
       {
         path: "/admin/dashboard",
@@ -52,60 +109,23 @@ const routes = [
         component: Transaction,
       },
       {
+        name: 'UserManagement',
+        path: "/admin/users",
+        component: UserManagement,
+      },
+      {
+        name: 'Report',
+        path: "/admin/report",
+        component: Report,
+      },
+      {
         name: 'Invoice',
         path: "/admin/invoice/:id",
         component: Invoice,
       },
-      {
-        path: "/admin/settings",
-        component: Settings,
-      },
-      {
-        path: "/admin/tables",
-        component: Tables,
-      },
-      {
-        path: "/admin/maps",
-        component: Maps,
-      },
     ],
   },
-  {
-    path: "/auth",
-    redirect: "/auth/login",
-    component: Auth,
-    children: [
-      {
-        path: "/auth/login",
-        component: Login,
-      },
-      {
-        path: "/auth/register",
-        component: Register,
-      },
-    ],
-  },
-  {
-    path: "/landing",
-    component: Landing,
-  },
-  {
-    path: "/profile",
-    component: Profile,
-  },
-  {
-    path: "/",
-    component: Index,
-  },
-  {
-    path: "/store",
-    component: Store,
-  },
-  {
-    path: "/store/:kodemobil",
-    component: DetailCar,
-  },
-  { path: "/:pathMatch(.*)*", redirect: "/" },
+  { path: "/:pathMatch(.*)*", redirect: "/login" },
 ];
 
 const router = createRouter({

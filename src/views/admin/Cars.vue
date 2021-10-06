@@ -116,6 +116,7 @@
 </template>
 
 <script>
+// import $ from 'jquery'
 import ModalCreate from "../../components/Modal/Cars/ModalCreate.vue";
 import ModalUpdate from "../../components/Modal/Cars/ModalUpdate.vue";
 import ModalDelete from "../../components/Modal/Cars/ModalDelete.vue";

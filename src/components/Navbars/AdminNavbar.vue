@@ -50,7 +50,7 @@
 
     <DisclosurePanel class="md:hidden">
       <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-        <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block px-3 py-2 rounded-md text-base font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+        <router-link v-for="item in navigation" :key="item.name" :to="item.href" class="block px-3 py-2 rounded-md font-medium text-white" >{{ item.name }}</router-link>
       </div>
       <div class="pt-4 pb-3 border-t border-gray-700">
         <div class="flex items-center px-5">
@@ -67,7 +67,7 @@
           </button>
         </div>
         <div class="mt-3 px-2 space-y-1">
-          <router-link v-for="item in userNavigation" :key="item.name" :to="item.href" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">{{ item.name }}</router-link>
+          <router-link v-for="item in userNavigation" :key="item.name" :to="item.href" class="block px-3 py-2 rounded-md font-medium text-white">{{ item.name }}</router-link>
         </div>
       </div>
     </DisclosurePanel>
@@ -92,9 +92,9 @@ const navigation = [
   { name: 'Reports', href: '/admin/report', current: false },
 ]
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Your Profile', href: '/admin/profile' },
+  { name: 'Settings', href: '/admin/setting' },
+  { name: 'Sign out', href: '/admin/logout' },
 ]
 
 export default {
@@ -117,6 +117,21 @@ export default {
       userNavigation,
     }
   },
+  methods: {
+    deleteCookie( name, path, domain ) {
+      if( this.getCookie( name ) ) {
+        document.cookie = name + "=" +
+        ((path) ? ";path="+path:"")+
+        ((domain)?";domain="+domain:"") +
+        ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+      }
+    },
+    getCookie(name){
+      return document.cookie.split(';').some(c => {
+          return c.trim().startsWith(name + '=');
+      });
+    }
+  }
 }
 </script>
 
