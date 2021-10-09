@@ -61,6 +61,14 @@
           </section>
         </form>
       </div>
+      <div class="bg-white py-7 px-10 rounded-md shadow" id="formLogin" @submit="login">
+          <section class="flex flex-col gap-4">
+            <span class="w-full text-sm">
+              <p>email : admin@gmail.com</p>
+              <p>pass : admin</p>
+            </span>
+          </section>
+      </div>
     </div>
   </div>
 </template>
