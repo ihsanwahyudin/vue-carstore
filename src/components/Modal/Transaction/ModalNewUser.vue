@@ -59,6 +59,7 @@ import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } f
 import { ExclamationIcon } from '@heroicons/vue/outline'
 
 export default {
+  emits: ['sendDataCustomer'],
   components: {
     Dialog,
     DialogOverlay,
@@ -92,7 +93,7 @@ export default {
       e.preventDefault();
       let form = document.querySelector('#formNewCustomer');
       let formData = new FormData(form);
-      fetch('http://127.0.0.1:8000/api/customer', {
+      fetch('https://backend-carstore.herokuapp.com/api/customer', {
         method: 'POST',
         body: formData
       })

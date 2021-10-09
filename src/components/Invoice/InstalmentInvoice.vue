@@ -9,7 +9,7 @@
             </div>
             <div class="row">
               <div class="col-6">
-                <p class="font-sm-3 m-0"><strong>Nomor Faktur</strong> : <span class="font-blue">2021/10/04/{{ $route.params.id }}</span> </p>
+                <p class="font-sm-3 m-0"><strong>Nomor Faktur</strong> : <span class="font-blue">{{ convertDate(dataInvoice.cash_tgl) + '/' + dataInvoice.kode_cicilan }}</span> </p>
                 <p class="font-sm-3 mt-5 text-secondary"><small>Atas Nama :</small></p>
               </div>
 
@@ -30,16 +30,16 @@
                 </div>
                 <div class="right-side">
                   <div class="item">
-                    <p>Ihsan</p>
+                    <p>{{ dataInvoice.nama_pembeli }}</p>
                   </div>
                   <div class="item">
-                    <p>14 sept 2021</p>
+                    <p>{{ convertDateString(dataInvoice.tgl_cicilan) }}</p>
                   </div>
                   <div class="item">
-                    <p>14 sept 2021 - 15 okt 2021</p>
+                    <p>{{ convertDateString(dataInvoice.from) }} - {{ convertDateString(dataInvoice.to) }}</p>
                   </div>
                   <div class="item">
-                    <p>Cianjur</p>
+                    <p>{{ dataInvoice.alamat_pembeli }}</p>
                   </div>
                 </div>
               </section>
@@ -63,16 +63,16 @@
                 </div>
                 <div class="right-side">
                   <div class="item">
-                    Avanza
+                    {{ dataInvoice.merk }}
                   </div>
                   <div class="item">
-                    BC
+                    {{ dataInvoice.type }}
                   </div>
                   <div class="item">
-                    AVA2021001
+                    {{ dataInvoice.kode_mobil }}
                   </div>
                   <div class="item">
-                    Warni
+                    {{ dataInvoice.warna }}
                   </div>
                 </div>
               </section>
@@ -105,25 +105,56 @@
                 </div>
                 <div class="right-side">
                   <div class="item">
-                    Rp. 50.000.000
+                    Rp. {{ dataInvoice.harga_mobil }}
                   </div>
                   <div class="item">
-                    1 / 12 Bulan
+                    {{ dataInvoice.cicilan_ke }} / {{ dataInvoice.lama_cicilan }} Bulan
                   </div>
                   <div class="item">
-                    Rp. 100.000.000
+                    Rp. {{ dataInvoice.cicilan_sisa_harga }}
                   </div>
                   <div class="item">
-                    Rp. 1.500.000 / Bulan
+                    Rp. {{ dataInvoice.nilai_cicilan }} / Bulan
                   </div>
                   <div class="item">
-                    Rp. + 1.000.000
+                    Rp. + {{ dataInvoice.denda }}
                   </div>
                   <div class="item">
-                    Rp. 92.000.000
+                    Rp. {{ dataInvoice.jml_cicilan }}
                   </div>
                   <div class="item">
-                    Rp. 20.000.000
+                    Rp. {{ parseInt(dataInvoice.jml_cicilan) - parseInt(dataInvoice.nilai_cicilan) }}
+                  </div>
+                </div>
+              </section>
+
+              <hr class="my-3">
+
+              <section class="container-invoice">
+                <div class="left-side">
+                  <div class="item-ttd flex-column">
+                    <div class="container-ttd">
+                      <div class="head-ttd">
+                        Pembeli
+                      </div>
+                      <div class="body-ttd">
+
+                      </div>
+                      <div class="footer-ttd"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="right-side">
+                  <div class="item-ttd flex-column">
+                    <div class="container-ttd">
+                      <div class="head-ttd">
+                        <h1 class="my-font-md" style="font-family: 'Lobster', cursive;">CarStore</h1>
+                      </div>
+                      <div class="body-ttd">
+
+                      </div>
+                      <div class="footer-ttd"></div>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -139,8 +170,37 @@
 </template>
 
 <script>
-export default {
+import moment from 'moment';
 
+export default {
+  data() {
+    return {
+      dataInvoice: [],
+    }
+  },
+  methods: {
+    getInvoiceInstalment(id) {
+      fetch('http://localhost:8000/api/invoice/instalment/' + id)
+      .then(response => response.json())
+      .then(result => {
+        this.dataInvoice = result;
+        console.info(this.dataInvoice);
+        this.$parent.showInvoice('instalment');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
+    convertDate(time) {
+      return moment(time).format('DD/MM/YYYY');
+    },
+    convertDateString(time) {
+      return moment(time).format('DD MMM YYYY');
+    },
+    formatNumber(number) {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
+  }
 }
 </script>
 
@@ -149,8 +209,6 @@ export default {
   font-family: 'Poppins', sans-serif;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
 .brand {
   color: rgba(79, 70, 229, 1);
   font-size: 2rem;
@@ -158,6 +216,10 @@ export default {
 
 .my-font-lg {
   font-size: 2rem;
+}
+
+.my-font-md {
+  font-size: 1rem;
 }
 
 .text-secondary {
@@ -188,6 +250,48 @@ export default {
   align-items: center;
   padding: 0.5rem 1rem 0.5rem 1rem;
   font-size: 12px;
+}
+
+.item-ttd {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  font-size: 12px;
+}
+
+.container-ttd {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.head-ttd {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.body-ttd {
+  width: 100px;
+  height: 50px;
+}
+
+.footer-ttd {
+  width: 100px;
+  padding: 5px;
+  border-bottom: 1px solid black;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-left {
+  justify-content: start;
+}
+
+.justify-right {
+  justify-content: end;
 }
 
 @media print {

@@ -234,7 +234,7 @@ export default {
       // for(let item of formData.values()) {
       //   console.info(item);
       // }
-      fetch('http://127.0.0.1:8000/api/instalment/payment', {
+      fetch('https://backend-carstore.herokuapp.com/api/instalment/payment', {
         method: 'POST',
         body: formData
       })

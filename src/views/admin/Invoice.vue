@@ -4,9 +4,9 @@
       <button class="bg-indigo-600 text-white px-4 py-2 rounded-md" onclick="window.print();">Print</button>
     </div>
   </header>
-  <CashInvoice />
-  <CreditInvoice />
-  <InstalmentInvoice />
+  <CashInvoice ref="cashInvoice" as="div" :class="{'hidden': invoiceActive.cash}" />
+  <CreditInvoice ref="creditInvoice" as="div" :class="{'hidden': invoiceActive.credit}" />
+  <InstalmentInvoice ref="instalmentInvoice" as="div" :class="{'hidden': invoiceActive.instalment}" />
 </template>
 
 <script>
@@ -32,7 +32,11 @@ var forestRef = storageRef.child('images/48.png');
 // });
 
 export default {
+  props: ['dataMobil', 'dataCustomer', 'dataCredit'],
+  emits: ['sendData'],
   mounted() {
+    let id = this.$route.params.id;
+    this.getDataInvoice(id);
     // console.info(forestRef);
     // this.getImgUrl('images/1.png');
   },
@@ -40,6 +44,11 @@ export default {
     return {
       file: null,
       filename: '',
+      invoiceActive: {
+        cash: true,
+        credit: true,
+        instalment: true,
+      }
     }
   },
   components: {
@@ -70,13 +79,40 @@ export default {
         console.info(url);
         this.filename = url;
       })
+    },
+    getDataInvoice(id) {
+      let kode = id.substr(0, 1);
+      switch(kode) {
+        case 'C':
+          this.$refs.cashInvoice.getInvoiceCash(id);
+          break;
+        case 'K':
+          this.$refs.creditInvoice.getInvoiceCredit(id);
+          break;
+        case 'A':
+          this.$refs.instalmentInvoice.getInvoiceInstalment(id);
+          break;
+      }
+    },
+    showInvoice(status) {
+      switch(status) {
+        case 'cash':
+          this.invoiceActive.cash = false;
+          break;
+        case 'credit':
+          this.invoiceActive.credit = false;
+          break;
+        case 'instalment':
+          this.invoiceActive.instalment = false;
+          break;
+        default:
+      }
     }
   }
 }
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 .brand {
   color: rgba(79, 70, 229, 1);

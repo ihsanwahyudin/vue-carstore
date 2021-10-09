@@ -44,7 +44,7 @@ const routes = [
     path: "/login",
     component: Login,
     beforeEnter: (to, from, next) => {
-      fetch('http://127.0.0.1:8000/api/user', {
+      fetch('https://backend-carstore.herokuapp.com/api/user', {
         headers: {
           'Accept': 'application/json',
           'Authorization': `Bearer ${getCookie('jwt')}`,
@@ -78,7 +78,7 @@ const routes = [
     redirect: "/admin/cars",
     component: Admin,
     beforeEnter: (to, from, next) => {
-      fetch('http://127.0.0.1:8000/api/user', {
+      fetch('https://backend-carstore.herokuapp.com/api/user', {
         headers: {
           'Accept': 'application/json',
           'Authorization': `Bearer ${getCookie('jwt')}`,

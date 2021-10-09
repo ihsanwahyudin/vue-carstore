@@ -1,6 +1,7 @@
 <template>
   <main>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+
       <!-- Replace with your content -->
       <div class="mt-10 sm:mt-0">
         <div class="flex justify-end">
@@ -63,7 +64,7 @@
                     <div class="col-span-12 md:col-span-6 lg:col-span-7">
                       <div class="group mb-6 relative overflow-hidden">
                         <div class="relative w-full bg-white rounded-lg overflow-hidden group-hover:opacity-75 h-64">
-                          <img :src="'http://127.0.0.1:8000/images/' + selectedCar.gambar" class="w-full h-full object-center object-cover" />
+                          <img :src="'http://127.0.0.1:8000/images/' + selectedCar.gambar" class="w-full h-full object-center object-contain" />
                         </div>
                       </div>
                     </div>
@@ -98,15 +99,15 @@
             </div>
           </form>
         </div>
-        <Payment ref="payment" :selectedCustomer="selectedCustomer" @getData="getData" />
+        <Payment ref="payment" :selectedCustomer="selectedCustomer" @getData="refreshData" />
       </div>
       <!-- /End replace -->
     </div>
+
+    <ModalNewUser ref="modalNewUser" @sendDataCustomer="selectedCustomer = $event;" />
+    <ModalSelectUser ref="modalSelectUser" :paymentMethod="paymentMethod" :dataCustomer="dataCustomer" @selectUser="selectUser($event)" />
+    <ModalSelectCars ref="modalSelectCars" :dataMobil="dataMobil" @selectCar="selectCar($event)" />
   </main>
-  
-  <ModalNewUser ref="modalNewUser" @sendDataCustomer="selectedCustomer = $event; getDataCustomer();" />
-  <ModalSelectUser ref="modalSelectUser" :dataCustomer="dataCustomer" @selectUser="selectUser($event)" />
-  <ModalSelectCars ref="modalSelectCars" :dataMobil="dataMobil" @selectCar="selectCar($event)" />
 </template>
 
 <script>
@@ -116,10 +117,12 @@ import ModalSelectUser from '../../Modal/Transaction/ModalSelectUser.vue';
 import ModalNewUser from '../../Modal/Transaction/ModalNewUser.vue';
 
 export default {
-  props: ['dataMobil', 'dataCustomer'],
-  emits: ['getData'],
-  mounted() {
-
+  props: ['dataMobil', 'dataCustomer', 'dataCredit'],
+  components: {
+    Payment,
+    ModalSelectCars,
+    ModalSelectUser,
+    ModalNewUser,
   },
   data: function() {
     return {
@@ -137,12 +140,6 @@ export default {
         harga_mobil: '',
       }
     }
-  },
-  components: {
-    Payment,
-    ModalSelectCars,
-    ModalSelectUser,
-    ModalNewUser,
   },
   methods: {
     selectedColor(e) {
@@ -165,17 +162,16 @@ export default {
     },
     formatNumber(number) {
       return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
+    },
+    refreshData() {
+      this.$parent.getDataCustomer();
+      this.$parent.getDataCredit();
+      this.$parent.getData();
+    },
   }
 }
 </script>
 
-<style scoped>
-.color-pick.active {
-  border: 2px solid rgba(99, 102, 241, 1);
-}
+<style>
 
-.color-pick {
-  border: 2px solid transparent;
-}
 </style>

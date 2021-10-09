@@ -84,7 +84,7 @@ export default {
       // for (let value of formData.values()) {
       //   console.log(value);
       // }
-      fetch('http://127.0.0.1:8000/api/cars/' + this.dataMobilByIndex.kode_mobil, {
+      fetch('https://backend-carstore.herokuapp.com/api/cars/' + this.dataMobilByIndex.kode_mobil, {
         method: 'POST',
         body: formData
       })

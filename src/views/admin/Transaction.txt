@@ -1,0 +1,90 @@
+<template>
+  <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto pt-6 px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold text-gray-900">
+        Transaction
+      </h1>
+      <nav class="flex justify-center items-center bg-white w-full mt-6">
+        <div @click="paymentMethod = true" class="w-full py-2 px-4 text-center cursor-pointer hover:text-indigo-500 hover:bg-indigo-100" :class="{'text-indigo-500 border-b border-indigo-500': paymentMethod, 'text-gray-500': !paymentMethod}">Transaksi Baru</div>
+        <div @click="paymentMethod = false" class="w-full py-2 px-4 text-center cursor-pointer hover:text-indigo-500 hover:bg-indigo-100" :class="{'text-indigo-500 border-b border-indigo-500': !paymentMethod, 'text-gray-500': paymentMethod}">Bayar Cicilan</div>
+      </nav>
+    </div>
+  </header>
+  
+  <NewTransaction v-if="paymentMethod" :dataMobil="dataMobil" :dataCustomer="dataCustomer"></NewTransaction>
+  <Instalment v-if="!paymentMethod" :dataMobil="dataMobil" :dataCustomer="dataCustomer" :dataCredit="dataCredit" :paymentMethod="paymentMethod" @getData="getData(); getDataCustomer(); getDataCredit();" ></Instalment>
+  
+</template>
+
+<script>
+import NewTransaction from '../../components/Content/Transaction/NewTransaction.vue';
+import Instalment from '../../components/Content/Transaction/Instalment.vue';
+
+export default {
+  props: ['dataMobil', 'dataCustomer', 'dataCredit'],
+  emits: ['sendData'],
+  components: {
+    NewTransaction,
+    Instalment,
+  },
+  mounted() {
+    if(this.dataMobil.length == 0) {
+      this.getData();
+    }
+    if(this.dataCustomer.length == 0) {
+      this.getDataCustomer();
+    }
+    if(this.dataCredit.length == 0) {
+      this.getDataCredit();
+    }
+
+  },
+  data: function() {
+    return {
+      paymentMethod: true,
+    }
+  },
+  methods: {
+    getData() {
+      fetch('http://127.0.0.1:8000/api/cars')
+      .then(response => response.json())
+      .then(result => {
+        this.$emit('sendData', { dataMobil: result })
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
+    getDataCustomer() {
+      fetch('http://127.0.0.1:8000/api/customer')
+      .then(response => response.json())
+      .then(result => {
+        this.$emit('sendData', { dataCustomer: result });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
+    getDataCredit() {
+      fetch('http://127.0.0.1:8000/api/report/data/kredit')
+      .then(response => response.json())
+      .then(result => {
+        this.$emit('sendData', { dataCredit: result });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
+  }
+}
+</script>
+
+<style scoped>
+.color-pick.active {
+  border: 2px solid rgba(99, 102, 241, 1);
+}
+
+.color-pick {
+  border: 2px solid transparent;
+}
+</style>

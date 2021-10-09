@@ -139,12 +139,17 @@
       </div>
     </form>
   </div>
+  <!-- <ModalConfirmation ref="modalConfirmation" /> -->
 </template>
 
 <script>
+// import ModalConfirmation from "../../Modal/Transaction/ModalConfirmation.vue";
 export default {
   props: ['selectedCustomer'],
   emits: ['getData'],
+  components: {
+    // ModalConfirmation,
+  },
   mounted() {
   },
   data: () => {
@@ -155,6 +160,7 @@ export default {
         cash: {
           bunga: 0,
           grandtotal: 0,
+          cash_bayar: '',
         },
         credit: {
           bunga: 0,
@@ -163,6 +169,7 @@ export default {
           min_uang_muka: 0,
           paketJmlCicilan: 0,
           persentase_uang_muka: 20,
+          uang_muka: '',
         }
       },
       selectedCar: {
@@ -225,6 +232,7 @@ export default {
         if(this.selectedCar.kode_mobil != '' || this.selectedCar.kode_mobil.length != 0) {
           if(this.isCashPayment) {
             if(this.cashFormValidation()) {
+              // this.transactionConfirmation();
               this.storeCash(formData);
             } else {
               this.warningToast('Uang Tidak Cukup !!!');
@@ -244,7 +252,7 @@ export default {
       }
     },
     storeCash(formData) {
-      fetch('http://127.0.0.1:8000/api/cash/payment', {
+      fetch('https://backend-carstore.herokuapp.com/api/cash/payment', {
         method: 'POST',
         body: formData
       })
@@ -268,7 +276,7 @@ export default {
       // for (let value of formData.values()) {
       //   console.log(value);
       // }
-      fetch('http://127.0.0.1:8000/api/credit/payment', {
+      fetch('https://backend-carstore.herokuapp.com/api/credit/payment', {
         method: 'POST',
         body: formData
       })
@@ -287,6 +295,15 @@ export default {
       .catch(error => {
         console.error('Error:', error.message);
       });
+    },
+    transactionConfirmation() {
+      let data = {
+        'selectedCustomer' : this.selectedCustomer,
+        'selectedCar' : this.selectedCar,
+        'payment' : this.payment
+      }
+      this.$refs.modalConfirmation.isAccepted(data);
+      // this.storeCash(formData)
     },
     cashFormValidation() {
       let hargaMobil = this.selectedCar.harga_mobil;
@@ -313,6 +330,20 @@ export default {
         };
         return false;
       }
+    },
+    confirmToast() {
+      this.$swal.fire({
+        title: 'Pastikan data sudah benar !!!',
+        text: 'Pembeli : ' + this.selectedCustomer.nama_pembeli,
+        showCancelButton: true,
+        confirmButtonText: 'Save',
+        denyButtonText: `Don't save`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          Swal.fire('Saved!', '', 'success')
+        }
+      })
     },
     successToast(message) {
       const Toast = this.$swal.mixin({

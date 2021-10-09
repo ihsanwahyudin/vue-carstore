@@ -9,6 +9,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.4.1",
     "@heroicons/vue": "^1.0.4",
+    "chart.js": "^3.5.1",
     "firebase": "^9.1.1",
     "jquery": "^3.6.0",
     "moment": "^2.29.1",

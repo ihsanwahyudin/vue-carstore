@@ -91,7 +91,7 @@ export default {
         console.log(pair[0], pair[1]);
       }
       
-      fetch('http://127.0.0.1:8000/api/login', {
+      fetch('https://backend-carstore.herokuapp.com/api/login', {
         method: 'POST',
         body: formData,
         // credentials: 'include',
@@ -113,7 +113,7 @@ export default {
       });
     },
     getDataUser(token) {
-      fetch('http://127.0.0.1:8000/api/user', {
+      fetch('https://backend-carstore.herokuapp.com/api/user', {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

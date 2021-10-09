@@ -62,9 +62,11 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center gap-2">
                       <button type="button" class="text-indigo-600 hover:text-indigo-900 text-lg" v-on:click="getDataByIndex(index)">
+                        <!-- <small>update</small> -->
                         <i class='bx bx-edit'></i>
                       </button>
                       <button type="button" class="text-red-500 hover:text-red-700 text-lg" v-on:click="deleteDataByIndex(index)">
+                        <!-- <small>delete</small> -->
                         <i class='bx bx-trash'></i>
                       </button>
                     </td>
@@ -147,10 +149,11 @@ export default {
       document.getElementById('modalUpdate').classList.toggle('active');
     },
     getData() {
-      fetch('http://127.0.0.1:8000/api/cars')
+      fetch('https://backend-carstore.herokuapp.com/api/cars')
       .then(response => response.json())
       .then(result => {
         this.$emit('sendData', { dataMobil: result });
+        // $('.animate-pulse').addClass('hidden');
       })
       .catch(error => {
         console.error('Error:', error);
@@ -159,7 +162,7 @@ export default {
     getDataByIndex(index) {
       this.specificData = this.dataMobil[index];
       $('#modalUpdate .input-file').html(`
-        <input type="file" name="gambar" class="dropify rounded-md" data-default-file="http://127.0.0.1:8000/images/${this.specificData.gambar}" data-allowed-file-extensions="jpg jpeg png"/>
+        <input type="file" name="gambar" class="dropify rounded-md" data-default-file="https://backend-carstore.herokuapp.com/images/${this.specificData.gambar}" data-allowed-file-extensions="jpg jpeg png"/>
       `);
       $('#modalUpdate .dropify').dropify();
       this.modalUpdate();

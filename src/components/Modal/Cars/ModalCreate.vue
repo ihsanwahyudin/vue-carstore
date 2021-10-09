@@ -56,6 +56,7 @@
 </template>
 
 <script>
+
 export default {
   mounted() {
     $('#modalCreate .dropify').dropify();
@@ -81,7 +82,7 @@ export default {
       e.preventDefault();
       let form = document.querySelector('#modalCreate form');
       let formData = new FormData(form);
-      fetch('http://127.0.0.1:8000/api/cars', {
+      fetch('https://backend-carstore.herokuapp.com/api/cars', {
         method: 'POST',
         body: formData
       })
@@ -112,7 +113,7 @@ export default {
       });
 
       // try {
-      //   let request = fetch('http://127.0.0.1:8000/api/cars', {
+      //   let request = fetch('https://backend-carstore.herokuapp.com/api/cars', {
       //     method: 'POST',
       //     body: formData
       //   });

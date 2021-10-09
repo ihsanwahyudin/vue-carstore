@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import './index.css'
 // Vendors
-import 'jquery'
+// import './assets/vendors/jQuery/jquery-3.6.0.min.js'
 // import './assets/vendors/dropify/dropify.js'
 // import './assets/vendors/dropify/dropify.css'
 import VueSweetalert2 from 'vue-sweetalert2';

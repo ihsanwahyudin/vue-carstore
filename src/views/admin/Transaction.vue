@@ -75,7 +75,7 @@
                     <div class="col-span-12 md:col-span-6 lg:col-span-7">
                       <div class="group mb-6 relative overflow-hidden">
                         <div class="relative w-full bg-white rounded-lg overflow-hidden group-hover:opacity-75 h-64">
-                          <img :src="'http://127.0.0.1:8000/images/' + selectedCar.gambar" class="w-full h-full object-center object-contain" />
+                          <img :src="'https://backend-carstore.herokuapp.com/images/' + selectedCar.gambar" class="w-full h-full object-center object-contain" />
                         </div>
                       </div>
                     </div>
@@ -110,16 +110,17 @@
             </div>
           </form>
         </div>
-        <Payment ref="payment" :selectedCustomer="selectedCustomer" @getData="getData(); getDataCustomer(); getDataCredit();" />
+        <Payment ref="payment" :selectedCustomer="selectedCustomer" @getData="refreshData" />
       </div>
       <!-- /End replace -->
     </div>
 
-    <ModalNewUser ref="modalNewUser" @sendDataCustomer="selectedCustomer = $event; getDataCustomer();" />
+    <ModalNewUser ref="modalNewUser" @sendDataCustomer="selectedCustomer = $event; refreshData()" />
     <ModalSelectUser ref="modalSelectUser" :paymentMethod="paymentMethod" :dataCustomer="dataCustomer" @selectUser="selectUser($event)" />
     <ModalSelectCars ref="modalSelectCars" :dataMobil="dataMobil" @selectCar="selectCar($event)" />
   </main>
-
+  
+  <!-- <NewTransaction v-if="paymentMethod" :dataMobil="dataMobil" :dataCustomer="dataCustomer"></NewTransaction> -->
   <Instalment v-if="!paymentMethod" :dataMobil="dataMobil" :dataCustomer="dataCustomer" :dataCredit="dataCredit" :paymentMethod="paymentMethod" @getData="getData(); getDataCustomer(); getDataCredit();" ></Instalment>
   
 </template>
@@ -128,13 +129,16 @@
 import Payment from '../../components/Content/Transaction/Payment.vue';
 import ModalSelectCars from '../../components/Modal/Transaction/ModalSelectCars.vue';
 import ModalSelectUser from '../../components/Modal/Transaction/ModalSelectUser.vue';
+// import ModalNewUser from '../../Modal/Transaction/ModalNewUser.vue';
 import ModalNewUser from '../../components/Modal/Transaction/ModalNewUser.vue';
+// import NewTransaction from '../../components/Content/Transaction/NewTransaction.vue';
 import Instalment from '../../components/Content/Transaction/Instalment.vue';
 
 export default {
   props: ['dataMobil', 'dataCustomer', 'dataCredit'],
   emits: ['sendData'],
   components: {
+    // NewTransaction,
     Payment,
     ModalSelectCars,
     ModalSelectUser,
@@ -151,6 +155,7 @@ export default {
     if(this.dataCredit.length == 0) {
       this.getDataCredit();
     }
+
   },
   data: function() {
     return {
@@ -171,6 +176,36 @@ export default {
     }
   },
   methods: {
+    getData() {
+      fetch('https://backend-carstore.herokuapp.com/api/cars')
+      .then(response => response.json())
+      .then(result => {
+        this.$emit('sendData', { dataMobil: result })
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
+    getDataCustomer() {
+      fetch('https://backend-carstore.herokuapp.com/api/customer')
+      .then(response => response.json())
+      .then(result => {
+        this.$emit('sendData', { dataCustomer: result });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
+    getDataCredit() {
+      fetch('https://backend-carstore.herokuapp.com/api/report/data/kredit')
+      .then(response => response.json())
+      .then(result => {
+        this.$emit('sendData', { dataCredit: result });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
     selectedColor(e) {
       let colorpick = e.target.closest('div').parentNode.parentNode.parentNode.querySelectorAll('.color-pick');
       for(let i = 0; i < colorpick.length; i++) {
@@ -182,36 +217,6 @@ export default {
       e.preventDefault();
       this.$refs.modalSelectCars.toggleModal(true);
     },
-    getData() {
-      fetch('http://127.0.0.1:8000/api/cars')
-      .then(response => response.json())
-      .then(result => {
-        this.$emit('sendData', { dataMobil: result })
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    },
-    getDataCustomer() {
-      fetch('http://127.0.0.1:8000/api/customer')
-      .then(response => response.json())
-      .then(result => {
-        this.$emit('sendData', { dataCustomer: result });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    },
-    getDataCredit() {
-      fetch('http://127.0.0.1:8000/api/report/data/kredit')
-      .then(response => response.json())
-      .then(result => {
-        this.$emit('sendData', { dataCredit: result });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    },
     selectUser(index) {
       this.selectedCustomer = this.dataCustomer[index];
     },
@@ -221,7 +226,12 @@ export default {
     },
     formatNumber(number) {
       return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
+    },
+    refreshData() {
+      this.getDataCustomer();
+      this.getDataCredit();
+      this.getData();
+    },
   }
 }
 </script>

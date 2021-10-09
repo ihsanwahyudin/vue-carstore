@@ -12,9 +12,7 @@
     <main>
       <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <!-- Replace with your content -->
-        <div class="px-4 py-6 sm:px-0">
-          <div class="border-4 border-dashed border-gray-200 rounded-lg h-96" />
-        </div>
+        <canvas id="myChart"></canvas>
         <!-- /End replace -->
       </div>
     </main>
@@ -22,9 +20,6 @@
 </template>
 
 <script>
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
-
 const user = {
   name: 'Tom Cook',
   email: 'tom@example.com',
@@ -45,6 +40,9 @@ const userNavigation = [
 ]
 
 export default {
+  mounted() {
+    // Chart.register(...registerables);
+  },
   components: {
     // Disclosure,
     // DisclosureButton,
@@ -58,6 +56,7 @@ export default {
     // XIcon,
   },
   setup() {
+    
     return {
       user,
       navigation,
