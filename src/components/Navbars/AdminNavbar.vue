@@ -120,7 +120,7 @@ export default {
   methods: {
     logout(e) {
       e.preventDefault();
-      this.deleteCookie('jwt', '/', 'localhost');
+      this.deleteCookie('jwt', '/', 'mycarstore.netlify.app');
       this.$router.push({ name: 'Login' });
     },
     deleteCookie( name, path, domain ) {
