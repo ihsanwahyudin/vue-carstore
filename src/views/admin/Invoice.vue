@@ -36,7 +36,9 @@ export default {
   emits: ['sendData'],
   mounted() {
     let id = this.$route.params.id;
-    this.getDataInvoice(id);
+    setTimeout(() => {
+      this.getDataInvoice(id);
+    }, 2000);
     // console.info(forestRef);
     // this.getImgUrl('images/1.png');
   },
